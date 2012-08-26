@@ -30,7 +30,7 @@ class TentClient
         attrs = {}
         while attr = s.scan(/[a-z0-9*\-]+=/)
           next if attr =~ /\*/
-          val = s.scan(/".+"|[^\s";]+/).sub(/\A"/, '').sub(/"\Z/, '')
+          val = s.scan(/".+?"|[^\s";]+/).sub(/\A"/, '').sub(/"\Z/, '')
           attrs[attr[0..-2]] = val
           s.scan(/[^a-z]+/)
         end
