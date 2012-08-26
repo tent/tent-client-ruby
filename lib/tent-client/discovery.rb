@@ -10,6 +10,7 @@ class TentClient
 
     def perform
       @profiles = perform_head_discovery || perform_get_discovery
+      @profiles.map! { |l| l =~ %r{\A/} ? URI.join(url, l).to_s : l }
     end
 
     def perform_head_discovery
