@@ -1,5 +1,5 @@
 require "tent-client/version"
 
-module TentClient
-  # Your code goes here...
+class TentClient
+  autoload :LinkHeader, 'tent-client/link_header'
 end
