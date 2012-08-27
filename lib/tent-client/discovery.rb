@@ -8,17 +8,24 @@ class TentClient
       @client, @url = client, url
     end
 
+    def http
+      @http ||= Faraday.new do |f|
+        f.response :follow_redirects
+        f.adapter *Array(@client.faraday_adapter)
+      end
+    end
+
     def perform
       @profiles = perform_head_discovery || perform_get_discovery
       @profiles.map! { |l| l =~ %r{\A/} ? URI.join(url, l).to_s : l }
     end
 
     def perform_head_discovery
-      perform_header_discovery @client.http.head(url)
+      perform_header_discovery http.head(url)
     end
 
     def perform_get_discovery
-      res = @client.http.get(url)
+      res = http.get(url)
       perform_header_discovery(res) || perform_html_discovery(res)
     end
 

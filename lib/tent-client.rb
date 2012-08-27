@@ -20,7 +20,6 @@ class TentClient
   def http
     @http ||= Faraday.new(:url => server_url) do |f|
       f.request :json
-      f.response :follow_redirects
       f.response :json, :content_type => /\bjson$/
       f.adapter *Array(faraday_adapter)
     end
