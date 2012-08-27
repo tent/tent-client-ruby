@@ -2,7 +2,7 @@ require 'nokogiri'
 
 class TentClient
   class Discovery
-    attr_accessor :url, :profiles
+    attr_accessor :url, :profile_urls, :profile
 
     def initialize(client, url)
       @client, @url = client, url
@@ -16,8 +16,15 @@ class TentClient
     end
 
     def perform
-      @profiles = perform_head_discovery || perform_get_discovery
-      @profiles.map! { |l| l =~ %r{\A/} ? URI.join(url, l).to_s : l }
+      @profile_urls = perform_head_discovery || perform_get_discovery || []
+      @profile_urls.map! { |l| l =~ %r{\A/} ? URI.join(url, l).to_s : l }
+    end
+
+    def get_profile
+      profile_urls.each do |url|
+        res = @client.http.get(url)
+        break @profile = res.body if res['Content-Type'] == PROFILE_MEDIA_TYPE
+      end
     end
 
     def perform_head_discovery

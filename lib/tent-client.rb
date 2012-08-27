@@ -35,7 +35,7 @@ class TentClient
   end
 
   def discover(url)
-    Discovery.new(self, url).perform
+    Discovery.new(self, url).tap { |d| d.perform }
   end
 
   def follower

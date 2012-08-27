@@ -3,6 +3,7 @@ require 'spec_helper'
 describe TentClient::Discovery do
   LINK_HEADER = %Q(<https://example.com/tent/profile>; rel="profile"; type="%s") % TentClient::PROFILE_MEDIA_TYPE
   LINK_TAG_HTML = %Q(<html><head><link href="https://example.com/tent/profile" rel="profile" type="%s" /></head</html>) % TentClient::PROFILE_MEDIA_TYPE
+  TENT_PROFILE = %Q({"https://tent.io/types/info/core/v0.1.0":{"licenses":["http://creativecommons.org/licenses/by/3.0/"],"entity":"https://example.com","servers":["https://example.com/tent"]}})
 
   let(:http_stubs) { Faraday::Adapter::Test::Stubs.new }
   let(:client) { TentClient.new(nil, :faraday_adapter => [:test, http_stubs]) }
@@ -29,9 +30,17 @@ describe TentClient::Discovery do
     discovery.perform.should eq(['http://example.com/tent/profile'])
   end
 
+  it 'should fetch a profile' do
+    http_stubs.head('/') { [200, { 'Link' => LINK_HEADER }, ''] }
+    http_stubs.get('/tent/profile') { [200, { 'Content-Type' => TentClient::PROFILE_MEDIA_TYPE }, TENT_PROFILE] }
+    discovery = described_class.new(client, 'http://example.com/')
+    discovery.perform
+    discovery.get_profile.should eq(JSON.parse(TENT_PROFILE))
+  end
+
   it 'should delegate TentClient.discover' do
-    instance = stub(:perform => 1)
+    instance = mock(:perform => 1)
     described_class.expects(:new).with(client, 'url').returns(instance)
-    client.discover('url').should eq(1)
+    client.discover('url').should eq(instance)
   end
 end
