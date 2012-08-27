@@ -10,11 +10,18 @@ class TentClient
   BASE_MEDIA_TYPE = 'application/vnd.tent.%s+json'.freeze
   PROFILE_MEDIA_TYPE = (BASE_MEDIA_TYPE % 'profile').freeze
 
-  attr_accessor :faraday_adapter
+  attr_reader :faraday_adapter, :server_url
+
+  def initialize(server_url = nil, options={})
+    @server_url = server_url
+    @faraday_adapter = options[:faraday_adapter]
+  end
 
   def http
-    @http ||= Faraday.new do |f|
-      f.use FaradayMiddleware::FollowRedirects
+    @http ||= Faraday.new(:url => server_url) do |f|
+      f.request :json
+      f.response :follow_redirects
+      f.response :json, :content_type => /\bjson$/
       # hack to allow injecting test stubs
       if faraday_adapter.length > 1
         f.adapter faraday_adapter.first, &faraday_adapter.last
@@ -28,7 +35,16 @@ class TentClient
     @faraday_adapter || [Faraday.default_adapter]
   end
 
+  def server_url=(v)
+    @server_url = v
+    @http = nil # reset Faraday connection
+  end
+
   def discover(url)
     Discovery.new(self, url).perform
+  end
+
+  def follower
+    Follower.new(self)
   end
 end
