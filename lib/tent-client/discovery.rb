@@ -23,8 +23,12 @@ class TentClient
     def get_profile
       profile_urls.each do |url|
         res = @client.http.get(url)
-        break @profile = res.body if res['Content-Type'] == PROFILE_MEDIA_TYPE
+        if res['Content-Type'] == PROFILE_MEDIA_TYPE
+          @profile = res.body
+          break
+        end
       end
+      @profile
     end
 
     def perform_head_discovery
