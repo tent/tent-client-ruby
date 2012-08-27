@@ -22,17 +22,12 @@ class TentClient
       f.request :json
       f.response :follow_redirects
       f.response :json, :content_type => /\bjson$/
-      # hack to allow injecting test stubs
-      if faraday_adapter.length > 1
-        f.adapter faraday_adapter.first, &faraday_adapter.last
-      else
-        f.adapter *faraday_adapter
-      end
+      f.adapter *Array(faraday_adapter)
     end
   end
 
   def faraday_adapter
-    @faraday_adapter || [Faraday.default_adapter]
+    @faraday_adapter || Faraday.default_adapter
   end
 
   def server_url=(v)
