@@ -4,8 +4,8 @@ class TentClient
   class Discovery
     attr_accessor :url, :profiles
 
-    def initialize(url)
-      @url = url
+    def initialize(client, url)
+      @client, @url = client, url
     end
 
     def perform
@@ -14,11 +14,11 @@ class TentClient
     end
 
     def perform_head_discovery
-      perform_header_discovery TentClient.http.head(url)
+      perform_header_discovery @client.http.head(url)
     end
 
     def perform_get_discovery
-      res = TentClient.http.get(url)
+      res = @client.http.get(url)
       perform_header_discovery(res) || perform_html_discovery(res)
     end
 

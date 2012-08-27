@@ -5,8 +5,7 @@ describe TentClient::Discovery do
   LINK_TAG_HTML = %Q(<html><head><link href="https://example.com/tent/profile" rel="profile" type="%s" /></head</html>) % TentClient::PROFILE_MEDIA_TYPE
 
   def stub_http_requests(&block)
-    TentClient.instance_variable_set('@http', nil)
-    TentClient.stubs(:faraday_adapter).returns([:test, block])
+    TentClient.any_instance.stubs(:faraday_adapter).returns([:test, block])
   end
 
   it 'should discover profile urls via a link header' do
@@ -14,7 +13,7 @@ describe TentClient::Discovery do
       s.head('/') { [200, { 'Link' => LINK_HEADER }, ''] }
     end
 
-    discovery = described_class.new('http://example.com/')
+    discovery = described_class.new(TentClient.new, 'http://example.com/')
     discovery.perform.should eq(['https://example.com/tent/profile'])
   end
 
@@ -24,7 +23,7 @@ describe TentClient::Discovery do
       s.get('/') { [200, { 'Content-Type' => 'text/html' }, LINK_TAG_HTML] }
     end
 
-    discovery = described_class.new('http://example.com/')
+    discovery = described_class.new(TentClient.new, 'http://example.com/')
     discovery.perform.should eq(['https://example.com/tent/profile'])
   end
 
@@ -33,13 +32,14 @@ describe TentClient::Discovery do
       s.head('/') { [200, { 'Link' => LINK_HEADER.sub(%r{https://example.com}, '') }, ''] }
     end
 
-    discovery = described_class.new('http://example.com/')
+    discovery = described_class.new(TentClient.new, 'http://example.com/')
     discovery.perform.should eq(['http://example.com/tent/profile'])
   end
 
   it 'should delegate TentClient.discover' do
     instance = stub(:perform => 1)
-    described_class.expects(:new).with('url').returns(instance)
-    TentClient.discover('url').should eq(1)
+    client = TentClient.new
+    described_class.expects(:new).with(client, 'url').returns(instance)
+    client.discover('url').should eq(1)
   end
 end
