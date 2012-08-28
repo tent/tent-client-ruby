@@ -6,6 +6,7 @@ class TentClient
   autoload :Discovery, 'tent-client/discovery'
   autoload :LinkHeader, 'tent-client/link_header'
   autoload :Follower, 'tent-client/follower'
+  autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
 
   BASE_MEDIA_TYPE = 'application/vnd.tent.%s+json'.freeze
   PROFILE_MEDIA_TYPE = (BASE_MEDIA_TYPE % 'profile').freeze
@@ -14,13 +15,15 @@ class TentClient
 
   def initialize(server_url = nil, options={})
     @server_url = server_url
-    @faraday_adapter = options[:faraday_adapter]
+    @faraday_adapter = options.delete(:faraday_adapter)
+    @options = options
   end
 
   def http
     @http ||= Faraday.new(:url => server_url) do |f|
       f.request :json
       f.response :json, :content_type => /\bjson\Z/
+      f.use MacAuthMiddleware, @options
       f.adapter *Array(faraday_adapter)
     end
   end
