@@ -2,7 +2,7 @@ require 'nokogiri'
 
 class TentClient
   class Discovery
-    attr_accessor :url, :profile_urls, :profile
+    attr_accessor :url, :profile_urls, :primary_profile_url, :profile
 
     def initialize(client, url)
       @client, @url = client, url
@@ -25,10 +25,11 @@ class TentClient
         res = @client.http.get(url)
         if res['Content-Type'] == PROFILE_MEDIA_TYPE
           @profile = res.body
+          @primary_profile_url = url
           break
         end
       end
-      @profile
+      [@profile, @primary_profile_url]
     end
 
     def perform_head_discovery
