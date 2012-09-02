@@ -21,8 +21,8 @@ class TentClient
 
   def http
     @http ||= Faraday.new(:url => server_url) do |f|
-      f.request :json
-      f.response :json, :content_type => /\bjson\Z/
+      f.request :json unless @options[:skip_serialization]
+      f.response :json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
       f.use MacAuthMiddleware, @options
       f.adapter *Array(faraday_adapter)
     end
