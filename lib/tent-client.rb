@@ -44,4 +44,8 @@ class TentClient
   def follower
     Follower.new(self)
   end
+
+  def app
+    App.new(self)
+  end
 end
