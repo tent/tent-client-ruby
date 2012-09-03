@@ -6,6 +6,7 @@ class TentClient
   autoload :Discovery, 'tent-client/discovery'
   autoload :LinkHeader, 'tent-client/link_header'
   autoload :Follower, 'tent-client/follower'
+  autoload :App, 'tent-client/app'
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
 
   BASE_MEDIA_TYPE = 'application/vnd.tent.%s+json'.freeze
