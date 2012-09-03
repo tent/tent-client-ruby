@@ -7,6 +7,7 @@ class TentClient
   autoload :LinkHeader, 'tent-client/link_header'
   autoload :Follower, 'tent-client/follower'
   autoload :App, 'tent-client/app'
+  autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
   autoload :Post, 'tent-client/post'
 
