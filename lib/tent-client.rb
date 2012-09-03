@@ -8,6 +8,7 @@ class TentClient
   autoload :Follower, 'tent-client/follower'
   autoload :App, 'tent-client/app'
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
+  autoload :Post, 'tent-client/post'
 
   BASE_MEDIA_TYPE = 'application/vnd.tent.%s+json'.freeze
   PROFILE_MEDIA_TYPE = (BASE_MEDIA_TYPE % 'profile').freeze
@@ -48,5 +49,9 @@ class TentClient
 
   def app
     App.new(self)
+  end
+
+  def post
+    Post.new(self)
   end
 end
