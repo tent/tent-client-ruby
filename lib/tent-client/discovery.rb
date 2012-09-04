@@ -29,7 +29,7 @@ class TentClient
           break
         end
       end
-      [@profile, @primary_profile_url.sub(%r{/profile$}, '')]
+      [@profile, @primary_profile_url.to_s.sub(%r{/profile$}, '')]
     end
 
     def perform_head_discovery
