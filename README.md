@@ -1,29 +1,24 @@
 # TentClient
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'tent-client'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install tent-client
+TentClient implements a [Tent Protocol](http://tent.io) client library in Ruby.
+It is incomplete, currently only the endpoints required by
+[tentd](https://github.com/tent/tentd) and
+[tentd-admin](https://github.com/tent/tentd-admin) have been implemented.
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+# Tent profile discovery
+TentClient.new.discover("http://tent-user.example.org")
 
-## Contributing
+# Server communication
+client = TentClient.new('http://tent-user.example.org',
+                        :mac_key_id => 'be94a6bf',
+                        :mac_key => '974af035',
+                        :mac_algorithm => 'hmac-sha-256')
+client.following.create('http://another-tent.example.com')
+```
 
-1. Fork it
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+## Contributions
+
+If you find missing endpoints/actions, please submit a pull request.

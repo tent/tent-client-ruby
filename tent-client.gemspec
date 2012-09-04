@@ -6,11 +6,11 @@ require 'tent-client/version'
 Gem::Specification.new do |gem|
   gem.name          = "tent-client"
   gem.version       = TentClient::VERSION
-  gem.authors       = ["Jonathan Rudenberg"]
-  gem.email         = ["jonathan@titanous.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.authors       = ["Jonathan Rudenberg", "Jesse Stuart"]
+  gem.email         = ["jonathan@titanous.com", "jessestuart@gmail.com"]
+  gem.description   = %q{Tent Protocol client}
+  gem.summary       = %q{Tent Protocol client}
+  gem.homepage      = "http://tent.io"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
