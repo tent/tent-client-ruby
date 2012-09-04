@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe TentClient::Discovery do
-  LINK_HEADER = %Q(<https://example.com/tent/profile>; rel="profile"; type="%s") % TentClient::PROFILE_MEDIA_TYPE
-  LINK_TAG_HTML = %Q(<html><head><link href="https://example.com/tent/profile" rel="profile" type="%s" /></head</html>) % TentClient::PROFILE_MEDIA_TYPE
-  TENT_PROFILE = %Q({"https://tent.io/types/info/core/v0.1.0":{"licenses":["http://creativecommons.org/licenses/by/3.0/"],"entity":"https://example.com","servers":["https://example.com/tent"]}})
+  LINK_HEADER = %(<https://example.com/tent/profile>; rel="%s") % TentClient::PROFILE_REL
+  LINK_TAG_HTML = %(<html><head><link href="https://example.com/tent/profile" rel="%s" /></head</html>) % TentClient::PROFILE_REL
+  TENT_PROFILE = %({"https://tent.io/types/info/core/v0.1.0":{"licenses":["http://creativecommons.org/licenses/by/3.0/"],"entity":"https://example.com","servers":["https://example.com/tent"]}})
 
   let(:http_stubs) { Faraday::Adapter::Test::Stubs.new }
   let(:client) { TentClient.new(nil, :faraday_adapter => [:test, http_stubs]) }
@@ -32,7 +32,7 @@ describe TentClient::Discovery do
 
   it 'should fetch a profile' do
     http_stubs.head('/') { [200, { 'Link' => LINK_HEADER }, ''] }
-    http_stubs.get('/tent/profile') { [200, { 'Content-Type' => TentClient::PROFILE_MEDIA_TYPE }, TENT_PROFILE] }
+    http_stubs.get('/tent/profile') { [200, { 'Content-Type' => TentClient::MEDIA_TYPE }, TENT_PROFILE] }
     discovery = described_class.new(client, 'http://example.com/')
     discovery.perform
     discovery.get_profile.should eq([JSON.parse(TENT_PROFILE), "https://example.com/tent/profile"])
