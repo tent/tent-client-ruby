@@ -12,8 +12,8 @@ class TentClient
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
   autoload :Post, 'tent-client/post'
 
-  BASE_MEDIA_TYPE = 'application/vnd.tent.%s+json'.freeze
-  PROFILE_MEDIA_TYPE = (BASE_MEDIA_TYPE % 'profile').freeze
+  MEDIA_TYPE = 'application/vnd.tent.v0+json'.freeze
+  PROFILE_REL = 'https://tent.io/rels/profile'.freeze
 
   attr_reader :faraday_adapter, :server_url
 
