@@ -12,10 +12,11 @@ It is incomplete, currently only the endpoints required by
 TentClient.new.discover("http://tent-user.example.org")
 
 # Server communication
-TentClient.new('http://tent-user.example.org', :mac_key_id => 'be94a6bf',
-                                               :mac_key => '974af035',
-                                               :mac_algorithm => 'hmac-sha-256')
-TentClient.following.create('http://another-tent.example.com')
+client = TentClient.new('http://tent-user.example.org',
+                        :mac_key_id => 'be94a6bf',
+                        :mac_key => '974af035',
+                        :mac_algorithm => 'hmac-sha-256')
+client.following.create('http://another-tent.example.com')
 ```
 
 ## Contributions
