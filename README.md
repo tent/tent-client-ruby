@@ -1,4 +1,4 @@
-# TentClient
+# Tent Ruby Client ![Build Status](https://magnum.travis-ci.com/tent/tent-client-ruby.png?branch=master&token=YmxLSPgdpsxNUMWJpzRx)
 
 TentClient implements a [Tent Protocol](http://tent.io) client library in Ruby.
 It is incomplete, currently only the endpoints required by
