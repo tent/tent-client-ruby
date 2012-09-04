@@ -11,6 +11,7 @@ class TentClient
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
+  autoload :AcceptHeaderMiddleware, 'tent-client/accept_header_middleware'
   autoload :Post, 'tent-client/post'
 
   MEDIA_TYPE = 'application/vnd.tent.v0+json'.freeze
@@ -28,6 +29,7 @@ class TentClient
     @http ||= Faraday.new(:url => server_url) do |f|
       f.request :json unless @options[:skip_serialization]
       f.response :json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
+      f.use AcceptHeaderMiddleware
       f.use MacAuthMiddleware, @options
       f.adapter *Array(faraday_adapter)
     end
