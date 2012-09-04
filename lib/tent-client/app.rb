@@ -6,6 +6,10 @@ class TentClient
       @client = client
     end
 
+    def create(data)
+      @client.http.post("/apps", data)
+    end
+
     def find(id)
       @client.http.get("/apps/#{id}")
     end
