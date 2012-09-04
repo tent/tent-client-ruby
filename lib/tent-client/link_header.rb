@@ -56,7 +56,7 @@ class TentClient
       end
 
       def to_s
-        attr_string = "; " + attributes.map { |k,v| "#{k}=#{v.inspect}" }.join('; ') if attributes
+        attr_string = "; " + attributes.sort.map { |k,v| "#{k}=#{v.inspect}" }.join('; ') if attributes
         "<#{uri}>#{attr_string}"
       end
 

@@ -19,6 +19,6 @@ describe TentClient::LinkHeader do
   it 'should convert a link header to a string' do
     expected_header = %Q(<https://example.com/tent/profile>; rel="profile"; type="application/vnd.tent.profile+json")
     link = new_link('https://example.com/tent/profile', :rel => 'profile', :type => 'application/vnd.tent.profile+json')
-    described_class.new(link).to_s.split(' ').sort.should eq(expected_header.split(' ').sort)
+    described_class.new(link).to_s.should eq(expected_header)
   end
 end
