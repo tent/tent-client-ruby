@@ -6,6 +6,7 @@ class TentClient
   autoload :Discovery, 'tent-client/discovery'
   autoload :LinkHeader, 'tent-client/link_header'
   autoload :Follower, 'tent-client/follower'
+  autoload :Profile, 'tent-client/profile'
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
@@ -54,5 +55,9 @@ class TentClient
 
   def post
     Post.new(self)
+  end
+
+  def profile
+    Profile.new(self)
   end
 end
