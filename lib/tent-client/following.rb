@@ -11,5 +11,9 @@ class TentClient
     def create(entity_uri)
       @client.http.post '/followings', :entity => entity_uri.sub(%r{/$}, '')
     end
+
+    def get(id)
+      @client.http.get "/followings/#{id}"
+    end
   end
 end
