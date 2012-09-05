@@ -14,6 +14,14 @@ class TentClient
       @client.http.get("/apps/#{id}")
     end
 
+    def fetch
+      @client.http.get("/apps")
+    end
+
+    def delete(id)
+      @client.http.delete("/apps/#{id}")
+    end
+
     def authorization
       AppAuthorization.new(@client)
     end

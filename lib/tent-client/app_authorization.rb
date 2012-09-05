@@ -9,5 +9,9 @@ class TentClient
     def create(app_id, data)
       @client.http.post("/apps/#{app_id}/authorizations", data)
     end
+
+    def delete(app_id, id)
+      @client.http.delete("/apps/#{app_id}/authorizations/#{id}")
+    end
   end
 end
