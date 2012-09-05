@@ -11,5 +11,13 @@ class TentClient
     def get(id)
       @client.http.get "/followers/#{id}"
     end
+
+    def update(id, data)
+      @client.http.put "/followers/#{id}", data
+    end
+
+    def delete(id)
+      @client.http.delete "/followers/#{id}"
+    end
   end
 end
