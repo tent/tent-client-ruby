@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 
-describe TentClient::MacAuthMiddleware do
+describe TentClient::Middleware::MacAuth do
   def auth_header(env)
     env[:request_headers]['Authorization']
   end

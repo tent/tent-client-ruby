@@ -10,9 +10,10 @@ class TentClient
   autoload :Profile, 'tent-client/profile'
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
-  autoload :MacAuthMiddleware, 'tent-client/mac_auth_middleware'
-  autoload :AcceptHeaderMiddleware, 'tent-client/accept_header_middleware'
   autoload :Post, 'tent-client/post'
+
+  require 'tent-client/middleware/accept_header'
+  require 'tent-client/middleware/mac_auth'
 
   MEDIA_TYPE = 'application/vnd.tent.v0+json'.freeze
   PROFILE_REL = 'https://tent.io/rels/profile'.freeze
@@ -29,8 +30,8 @@ class TentClient
     @http ||= Faraday.new(:url => server_url) do |f|
       f.request :json unless @options[:skip_serialization]
       f.response :json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
-      f.use AcceptHeaderMiddleware
-      f.use MacAuthMiddleware, @options
+      f.use Middleware::AcceptHeader
+      f.use Middleware::MacAuth, @options
       f.adapter *Array(faraday_adapter)
     end
   end
