@@ -10,12 +10,12 @@ class TentClient
       @client.http.post("/apps", data)
     end
 
-    def find(id)
+    def get(id)
       @client.http.get("/apps/#{id}")
     end
 
-    def fetch
-      @client.http.get("/apps")
+    def list(params = {})
+      @client.http.get("/apps", params)
     end
 
     def delete(id)

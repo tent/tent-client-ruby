@@ -4,8 +4,8 @@ class TentClient
       @client = client
     end
 
-    def fetch
-      @client.http.get '/followings'
+    def list(params = {})
+      @client.http.get '/followings', params
     end
 
     def create(entity_uri)

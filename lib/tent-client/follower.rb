@@ -8,7 +8,7 @@ class TentClient
       @client.http.post '/followers', data
     end
 
-    def fetch(params = {})
+    def list(params = {})
       @client.http.get "/followers", params
     end
 

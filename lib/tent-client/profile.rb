@@ -7,7 +7,7 @@ class TentClient
     end
 
     def update(type, data)
-      @client.http.put "/profile/#{URI.encode(type, ":/")}", data
+      @client.http.put "/profile/#{URI.encode_www_form_component(type)}", data
     end
 
     def get
