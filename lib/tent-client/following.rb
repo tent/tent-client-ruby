@@ -15,5 +15,9 @@ class TentClient
     def get(id)
       @client.http.get "/followings/#{id}"
     end
+
+    def delete(id)
+      @client.http.delete "/followings/#{id}"
+    end
   end
 end
