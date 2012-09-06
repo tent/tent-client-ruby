@@ -4,6 +4,10 @@ class TentClient
       @client = client
     end
 
+    def fetch(params)
+      @client.http.get('/posts', params)
+    end
+
     def create(post, options={})
       @client.http.post(options[:url] || '/posts', post)
     end
