@@ -22,7 +22,7 @@ class TentClient
 
       def sign_request(env)
         time = Time.now.to_i
-        nonce = SecureRandom.hex(8)
+        nonce = SecureRandom.hex(3)
         request_string = build_request_string(time, nonce, env)
         signature = Base64.encode64(OpenSSL::HMAC.digest(openssl_digest.new, @mac_key, request_string)).sub("\n", '')
         env[:request_headers]['Authorization'] = build_auth_header(time, nonce, signature)

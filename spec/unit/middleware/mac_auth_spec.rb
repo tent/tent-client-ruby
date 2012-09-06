@@ -32,7 +32,7 @@ describe TentClient::Middleware::MacAuth do
     let(:expected_header) { 'MAC id="h480djs93hd8", ts="1336363200", nonce="dj83hs9s", mac="%s"' }
     before do
       Time.expects(:now).returns(stub(:to_i => 1336363200))
-      SecureRandom.expects(:hex).with(8).returns('dj83hs9s')
+      SecureRandom.expects(:hex).with(3).returns('dj83hs9s')
     end
 
     it 'signs a GET request with no body' do
