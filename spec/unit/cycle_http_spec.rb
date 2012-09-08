@@ -4,7 +4,7 @@ describe TentClient::CycleHTTP do
 
   let(:http_stubs) { Faraday::Adapter::Test::Stubs.new }
   let(:client_options) { Hash.new }
-  let(:server_urls) { %w{ http://alex.example.org http://alexsmith.example.com http://smith.example.com } }
+  let(:server_urls) { %w{ http://alex.example.org/tent http://alexsmith.example.com/tent http://smith.example.com/tent } }
   let(:client) { TentClient.new(server_urls, client_options) }
 
   def expect_server(env, url)
@@ -12,7 +12,7 @@ describe TentClient::CycleHTTP do
   end
 
   it 'should proxy http verbs to Faraday' do
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls.first)
       [200, {}, '']
     }
@@ -25,23 +25,23 @@ describe TentClient::CycleHTTP do
       expect(cycle_http).to respond_to(verb)
     }
 
-    cycle_http.get('/foo/bar')
+    cycle_http.get('foo/bar')
 
     http_stubs.verify_stubbed_calls
   end
 
   it 'should retry http with next server url' do
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls.first)
       [500, {}, '']
     }
 
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls[1])
       [300, {}, '']
     }
 
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls.last)
       [200, {}, '']
     }
@@ -50,28 +50,28 @@ describe TentClient::CycleHTTP do
       f.adapter :test, http_stubs
     end
 
-    cycle_http.get('/foo/bar')
+    cycle_http.get('foo/bar')
 
     http_stubs.verify_stubbed_calls
   end
 
   it 'should return response when on last server url' do
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls.first)
       [500, {}, '']
     }
 
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls[1])
       [500, {}, '']
     }
 
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       expect_server(env, server_urls.last)
       [300, {}, '']
     }
 
-    http_stubs.get('/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env = {}|
       raise StandardError, 'expected stub not be called bus was'
     }
 
@@ -79,6 +79,6 @@ describe TentClient::CycleHTTP do
       f.adapter :test, http_stubs
     end
 
-    cycle_http.get('/foo/bar')
+    cycle_http.get('foo/bar')
   end
 end

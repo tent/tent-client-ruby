@@ -7,23 +7,23 @@ class TentClient
     end
 
     def create(data)
-      @client.http.post("/apps", data)
+      @client.http.post("apps", data)
     end
 
     def get(id)
-      @client.http.get("/apps/#{id}")
+      @client.http.get("apps/#{id}")
     end
 
     def list(params = {})
-      @client.http.get("/apps", params)
+      @client.http.get("apps", params)
     end
 
     def delete(id)
-      @client.http.delete("/apps/#{id}")
+      @client.http.delete("apps/#{id}")
     end
 
     def update(id, data)
-      @client.http.put("/apps/#{id}", data)
+      @client.http.put("apps/#{id}", data)
     end
 
     def authorization

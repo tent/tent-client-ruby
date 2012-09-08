@@ -5,15 +5,15 @@ class TentClient
     end
 
     def list(params = {})
-      @client.http.get('/posts', params)
+      @client.http.get('posts', params)
     end
 
     def create(post, options={})
-      @client.http.post(options[:url] || '/posts', post)
+      @client.http.post(options[:url] || 'posts', post)
     end
 
     def get(id)
-      @client.http.get("/posts/#{id}")
+      @client.http.get("posts/#{id}")
     end
   end
 end
