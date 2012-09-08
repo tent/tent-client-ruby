@@ -31,17 +31,17 @@ describe TentClient::CycleHTTP do
   end
 
   it 'should retry http with next server url' do
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls.first)
       [500, {}, '']
     }
 
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls[1])
       [300, {}, '']
     }
 
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls.last)
       [200, {}, '']
     }
@@ -56,22 +56,22 @@ describe TentClient::CycleHTTP do
   end
 
   it 'should return response when on last server url' do
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls.first)
       [500, {}, '']
     }
 
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls[1])
       [500, {}, '']
     }
 
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls.last)
       [300, {}, '']
     }
 
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       raise StandardError, 'expected stub not be called bus was'
     }
 
