@@ -12,7 +12,7 @@ describe TentClient::CycleHTTP do
   end
 
   it 'should proxy http verbs to Faraday' do
-    http_stubs.get('/tent/foo/bar') { |env = {}|
+    http_stubs.get('/tent/foo/bar') { |env|
       expect_server(env, server_urls.first)
       [200, {}, '']
     }
