@@ -23,6 +23,10 @@ class TentClient
       @client.http.get("posts/#{id}")
     end
 
+    def attachment
+      PostAttachment.new(@client)
+    end
+
     private
 
     def multipart_post(post, options, attachments)

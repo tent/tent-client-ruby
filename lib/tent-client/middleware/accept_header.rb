@@ -6,7 +6,7 @@ class TentClient
       end
 
       def call(env)
-        env[:request_headers]['Accept'] = MEDIA_TYPE
+        env[:request_headers]['Accept'] ||= MEDIA_TYPE
         @app.call(env)
       end
     end

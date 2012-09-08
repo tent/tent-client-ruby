@@ -11,6 +11,7 @@ class TentClient
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :Post, 'tent-client/post'
+  autoload :PostAttachment, 'tent-client/post_attachment'
   autoload :CycleHTTP, 'tent-client/cycle_http'
 
   require 'tent-client/middleware/accept_header'
