@@ -11,6 +11,7 @@ class TentClient
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :Post, 'tent-client/post'
+  autoload :CycleHTTP, 'tent-client/cycle_http'
 
   require 'tent-client/middleware/accept_header'
   require 'tent-client/middleware/mac_auth'
@@ -19,16 +20,16 @@ class TentClient
   MEDIA_TYPE = 'application/vnd.tent.v0+json'.freeze
   PROFILE_REL = 'https://tent.io/rels/profile'.freeze
 
-  attr_reader :faraday_adapter, :server_url
+  attr_reader :faraday_adapter, :server_urls
 
-  def initialize(server_url = nil, options={})
-    @server_url = server_url
+  def initialize(server_urls = [], options={})
+    @server_urls = Array(server_urls)
     @faraday_adapter = options.delete(:faraday_adapter)
     @options = options
   end
 
   def http
-    @http ||= Faraday.new(:url => server_url) do |f|
+    @http ||= CycleHTTP.new(self) do |f|
       f.use Middleware::EncodeJson unless @options[:skip_serialization]
       f.response :json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
       f.use Middleware::AcceptHeader
@@ -42,7 +43,7 @@ class TentClient
   end
 
   def server_url=(v)
-    @server_url = v
+    @server_urls = Array(v)
     @http = nil # reset Faraday connection
   end
 
