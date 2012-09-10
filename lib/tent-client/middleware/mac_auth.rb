@@ -35,7 +35,7 @@ class TentClient
         else
           body = env[:body]
         end
-        [time.to_s, nonce, env[:method].to_s.upcase, env[:url].request_uri, env[:url].host, env[:url].port, body, nil].join("\n")
+        [time.to_s, nonce, env[:method].to_s.upcase, env[:url].request_uri, env[:url].host, env[:url].port || env[:url].inferred_port, body, nil].join("\n")
       end
 
       def build_auth_header(time, nonce, signature)
