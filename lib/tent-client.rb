@@ -7,6 +7,7 @@ class TentClient
   autoload :LinkHeader, 'tent-client/link_header'
   autoload :Follower, 'tent-client/follower'
   autoload :Following, 'tent-client/following'
+  autoload :Group, 'tent-client/group'
   autoload :Profile, 'tent-client/profile'
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
@@ -58,6 +59,10 @@ class TentClient
 
   def following
     Following.new(self)
+  end
+
+  def group
+    Group.new(self)
   end
 
   def app
