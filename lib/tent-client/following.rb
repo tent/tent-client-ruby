@@ -8,6 +8,10 @@ class TentClient
       @client.http.get 'followings', params
     end
 
+    def update(id, data)
+      @client.http.put "followings/#{id}", data
+    end
+
     def create(entity_uri)
       @client.http.post 'followings', :entity => entity_uri.sub(%r{/$}, '')
     end
