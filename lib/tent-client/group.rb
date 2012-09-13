@@ -7,5 +7,9 @@ class TentClient
     def list
       @client.http.get('/groups')
     end
+
+    def create(data)
+      @client.http.post('/groups', data)
+    end
   end
 end
