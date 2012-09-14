@@ -4,8 +4,8 @@ class TentClient
       @client = client
     end
 
-    def list
-      @client.http.get('/groups')
+    def list(params)
+      @client.http.get('/groups', params)
     end
 
     def create(data)
