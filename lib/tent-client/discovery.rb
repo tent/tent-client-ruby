@@ -23,7 +23,7 @@ class TentClient
     def get_profile
       profile_urls.each do |url|
         res = @client.http.get(url)
-        if res['Content-Type'] == MEDIA_TYPE
+        if res['Content-Type'].split(';').first == MEDIA_TYPE
           @profile = res.body
           @primary_profile_url = url
           break
