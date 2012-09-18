@@ -23,6 +23,10 @@ class TentClient
       @client.http.get("posts/#{id}")
     end
 
+    def delete(id)
+      @client.http.delete("posts/#{id}")
+    end
+
     def attachment
       PostAttachment.new(@client)
     end
