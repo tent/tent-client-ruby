@@ -40,9 +40,18 @@ class TentClient
     end
 
     def multipart_body(attachments)
-      parts = attachments.map do |attachment|
-        Faraday::Parts::FilePart.new(MULTIPART_BOUNDARY, attachment[:category], attachment_io(attachment))
-      end << Faraday::Parts::EpiloguePart.new(MULTIPART_BOUNDARY)
+      parts = attachments.inject({}) { |h,a|
+        (h[a[:category]] ||= []) << a; h
+      }.inject([]) { |a,(category,attachments)|
+        if attachments.size > 1
+          a += attachments.each_with_index.map { |attachment,i|
+            Faraday::Parts::FilePart.new(MULTIPART_BOUNDARY, "#{category}[#{i}]", attachment_io(attachment))
+          }
+        else
+          a << Faraday::Parts::FilePart.new(MULTIPART_BOUNDARY, category, attachment_io(attachments.first))
+        end
+        a
+      } << Faraday::Parts::EpiloguePart.new(MULTIPART_BOUNDARY)
       Faraday::CompositeReadIO.new(parts)
     end
 
