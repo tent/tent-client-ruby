@@ -23,5 +23,11 @@ class TentClient
     def delete(id)
       @client.http.delete "followers/#{id}"
     end
+
+    def challenge(path)
+      str = SecureRandom.hex(32)
+      res = @client.http.get(path.sub(%r{\A/}, ''), :challenge => str)
+      res.status == 200 && res.body.match(/\A#{str}/)
+    end
   end
 end
