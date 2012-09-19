@@ -20,7 +20,8 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'faraday', '0.8.4'
   gem.add_runtime_dependency 'faraday_middleware', '0.8.8'
   gem.add_runtime_dependency 'nokogiri'
-  gem.add_runtime_dependency 'json'
+  gem.add_runtime_dependency 'oj'
+  gem.add_runtime_dependency 'faraday_middleware-multi_json'
 
   gem.add_development_dependency 'rspec'
   gem.add_development_dependency 'bundler'

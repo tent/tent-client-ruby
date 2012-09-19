@@ -1,6 +1,8 @@
 require 'tent-client/version'
+require 'oj'
 require 'faraday'
 require 'faraday_middleware'
+require 'faraday_middleware/multi_json'
 
 class TentClient
   autoload :Discovery, 'tent-client/discovery'
@@ -33,7 +35,7 @@ class TentClient
   def http
     @http ||= CycleHTTP.new(self) do |f|
       f.use Middleware::EncodeJson unless @options[:skip_serialization]
-      f.response :json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
+      f.response :multi_json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
       f.use Middleware::AcceptHeader
       f.use Middleware::MacAuth, @options
       f.adapter *Array(faraday_adapter)
