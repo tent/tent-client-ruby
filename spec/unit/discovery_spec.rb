@@ -35,7 +35,7 @@ describe TentClient::Discovery do
     http_stubs.get('/tent/profile') { [200, { 'Content-Type' => TentClient::MEDIA_TYPE }, TENT_PROFILE] }
     discovery = described_class.new(client, 'http://example.com/')
     discovery.perform
-    discovery.get_profile.should eq([JSON.parse(TENT_PROFILE), "https://example.com/tent"])
+    discovery.get_profile.should eq([Oj.load(TENT_PROFILE), "https://example.com/tent"])
   end
 
   it 'should delegate TentClient.discover' do

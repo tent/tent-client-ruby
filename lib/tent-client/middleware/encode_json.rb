@@ -8,7 +8,7 @@ class TentClient
       CONTENT_TYPE = 'Content-Type'.freeze
 
       dependency do
-        require 'json' unless defined?(::JSON)
+        require 'oj' unless defined?(::Oj)
       end
 
       def call(env)
@@ -19,7 +19,7 @@ class TentClient
       end
 
       def encode(data)
-        ::JSON.dump data
+        ::Oj.dump data
       end
 
       def match_content_type(env)
