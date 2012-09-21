@@ -50,6 +50,14 @@ describe TentClient::Middleware::MacAuth do
         expected_header % 'hqpo01mLJLSYDbxmfRgNMEw38Wg='
       io.eof?.should be_false
     end
+
+    context 'SHA256' do
+      let(:options) { { :mac_key_id => 'h480djs93hd8', :mac_key => '489dks293j39', :mac_algorithm => 'hmac-sha-256' } }
+      it 'signs POST request with body using SHA256' do
+        auth_header(perform('/resource/1?b=1&a=2', :post, "asdf\nasdf")).should ==
+          expected_header % 'FbjOcg+SiY9Gx4ZyT5oZkIfXPI8mzDXBQ/ELXyPfbSc='
+      end
+    end
   end
 
   context 'faraday middleware' do
