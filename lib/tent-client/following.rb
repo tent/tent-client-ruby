@@ -16,8 +16,8 @@ class TentClient
       @client.http.put "followings/#{id}", data
     end
 
-    def create(entity_uri)
-      @client.http.post 'followings', :entity => entity_uri.sub(%r{/$}, '')
+    def create(entity_uri, data = {})
+      @client.http.post('followings', data.merge(:entity => entity_uri.sub(%r{/$}, '')))
     end
 
     def get(id)
