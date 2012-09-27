@@ -8,7 +8,7 @@ class TentClient
       CONTENT_TYPE = 'Content-Type'.freeze
 
       dependency do
-        require 'oj' unless defined?(::Oj)
+        require 'yajl' unless defined?(Yajl)
       end
 
       def call(env)
@@ -19,7 +19,7 @@ class TentClient
       end
 
       def encode(data)
-        ::Oj.dump data
+        Yajl::Encoder.encode(data)
       end
 
       def match_content_type(env)

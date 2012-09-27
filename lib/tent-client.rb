@@ -1,5 +1,5 @@
 require 'tent-client/version'
-require 'oj'
+require 'yajl'
 require 'faraday'
 require 'faraday_middleware'
 require 'faraday_middleware/multi_json'

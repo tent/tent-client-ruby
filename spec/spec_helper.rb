@@ -4,7 +4,6 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'bundler/setup'
 require 'mocha_standalone'
 require 'tent-client'
-require 'oj'
 
 Dir["#{File.dirname(__FILE__)}/support/*.rb"].each { |f| require f }
 
