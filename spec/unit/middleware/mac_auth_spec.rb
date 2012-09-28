@@ -41,13 +41,13 @@ describe TentClient::Middleware::MacAuth do
 
     it 'signs POST request with body' do
       auth_header(perform('/resource/1?b=1&a=2', :post, "asdf\nasdf")).should ==
-        expected_header % 'hqpo01mLJLSYDbxmfRgNMEw38Wg='
+        expected_header % 'SIBz/j9mI1Ba2Y+10wdwbQGv2Yk='
     end
 
     it 'signs POST request with a readable body' do
       io = StringIO.new("asdf\nasdf")
       auth_header(perform('/resource/1?b=1&a=2', :post, io)).should == 
-        expected_header % 'hqpo01mLJLSYDbxmfRgNMEw38Wg='
+        expected_header % 'SIBz/j9mI1Ba2Y+10wdwbQGv2Yk='
       io.eof?.should be_false
     end
 
@@ -55,7 +55,7 @@ describe TentClient::Middleware::MacAuth do
       let(:options) { { :mac_key_id => 'h480djs93hd8', :mac_key => '489dks293j39', :mac_algorithm => 'hmac-sha-256' } }
       it 'signs POST request with body using SHA256' do
         auth_header(perform('/resource/1?b=1&a=2', :post, "asdf\nasdf")).should ==
-          expected_header % 'FbjOcg+SiY9Gx4ZyT5oZkIfXPI8mzDXBQ/ELXyPfbSc='
+          expected_header % 'Xt51rtHY5F+jxKXMCoiKgXa3geofWW/7RANCXB1yu08='
       end
     end
   end
