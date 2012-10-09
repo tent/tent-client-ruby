@@ -49,7 +49,7 @@ class TentClient
     end
 
     def perform_html_discovery(res)
-      return unless res['Content-Type'] == 'text/html'
+      return unless res['Content-Type'].to_s.downcase =~ %r{\Atext/html}
       Nokogiri::HTML(res.body).css(%(link[rel="#{PROFILE_REL}"])).map { |l| l['href'] }
     end
   end

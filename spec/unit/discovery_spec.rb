@@ -17,7 +17,7 @@ describe TentClient::Discovery do
 
   it 'should discover profile urls via a link html tag' do
     http_stubs.head('/') { [200, { 'Content-Type' => 'text/html' }, ''] }
-    http_stubs.get('/') { [200, { 'Content-Type' => 'text/html' }, LINK_TAG_HTML] }
+    http_stubs.get('/') { [200, { 'Content-Type' => 'text/HTML; charset=UTF-8' }, LINK_TAG_HTML] }
 
     discovery = described_class.new(client, 'http://example.com/')
     discovery.perform.should eq(['https://example.com/tent/profile'])
