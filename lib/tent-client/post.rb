@@ -35,6 +35,10 @@ class TentClient
       PostAttachment.new(@client)
     end
 
+    def version
+      PostVersion.new(@client)
+    end
+
     private
 
     def multipart_post(post, options, attachments)
