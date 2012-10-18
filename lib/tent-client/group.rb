@@ -4,6 +4,10 @@ class TentClient
       @client = client
     end
 
+    def get(id)
+      @client.http.get("/groups/#{id}")
+    end
+
     def count(params={})
       @client.http.get('groups/count', params)
     end
