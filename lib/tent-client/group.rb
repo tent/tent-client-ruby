@@ -9,11 +9,11 @@ class TentClient
     end
 
     def list(params)
-      @client.http.get('/groups', params)
+      @client.http.get('groups', params)
     end
 
     def create(data)
-      @client.http.post('/groups', data)
+      @client.http.post('groups', data)
     end
   end
 end
