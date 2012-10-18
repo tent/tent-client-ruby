@@ -5,7 +5,7 @@ class TentClient
     end
 
     def get(id)
-      @client.http.get("/groups/#{id}")
+      @client.http.get("groups/#{id}")
     end
 
     def count(params={})
@@ -18,6 +18,10 @@ class TentClient
 
     def create(data)
       @client.http.post('groups', data)
+    end
+
+    def delete(id)
+      @client.http.delete("groups/#{id}")
     end
   end
 end
