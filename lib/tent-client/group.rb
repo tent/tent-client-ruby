@@ -8,7 +8,7 @@ class TentClient
       @client.http.get('groups/count', params)
     end
 
-    def list(params)
+    def list(params={})
       @client.http.get('groups', params)
     end
 
