@@ -1,3 +1,5 @@
+require 'json'
+
 class TentClient
   class Post
     MULTIPART_TYPE = 'multipart/form-data'.freeze
@@ -9,6 +11,15 @@ class TentClient
 
     def count(params={})
       @client.http.get('posts/count', params)
+    end
+
+    def update(post_id, post, options={})
+      options[:url] ||= "posts/#{post_id}"
+      if options[:attachments]
+        multipart_post(post, options, options.delete(:attachments), :put)
+      else
+        @client.http.put(options[:url], post)
+      end
     end
 
     def list(params = {})
@@ -41,10 +52,10 @@ class TentClient
 
     private
 
-    def multipart_post(post, options, attachments)
+    def multipart_post(post, options, attachments, method=:post)
       post_body = { :category => 'post', :filename => 'post.json', :type => MEDIA_TYPE, :data => post.to_json }
       body = multipart_body(attachments.unshift(post_body))
-      @client.http.post(options[:url] || 'posts', body, 'Content-Type' => "#{MULTIPART_TYPE};boundary=#{MULTIPART_BOUNDARY}")
+      @client.http.send(method, options[:url] || 'posts', body, 'Content-Type' => "#{MULTIPART_TYPE};boundary=#{MULTIPART_BOUNDARY}")
     end
 
     def multipart_body(attachments)
