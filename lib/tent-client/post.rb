@@ -55,7 +55,7 @@ class TentClient
     def multipart_post(post, options, attachments, method=:post)
       post_body = { :category => 'post', :filename => 'post.json', :type => MEDIA_TYPE, :data => post.to_json }
       body = multipart_body(attachments.unshift(post_body))
-      @client.http.send(method, options[:url] || 'posts', body, 'Content-Type' => "#{MULTIPART_TYPE};boundary=#{MULTIPART_BOUNDARY}")
+      @client.http.send(method, options[:url] || 'posts', body, 'Content-Type' => "#{MULTIPART_TYPE};boundary=#{MULTIPART_BOUNDARY}", 'Content-Length' => body.length.to_s)
     end
 
     def multipart_body(attachments)
