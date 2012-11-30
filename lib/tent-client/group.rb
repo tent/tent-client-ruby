@@ -8,6 +8,10 @@ class TentClient
       @client.http.get("groups/#{id}")
     end
 
+    def update(id, data)
+      @client.http.put("groups/#{id}", data)
+    end
+
     def count(params={})
       @client.http.get('groups/count', params)
     end
