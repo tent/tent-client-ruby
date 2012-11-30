@@ -11,6 +11,7 @@ class TentClient
   autoload :Following, 'tent-client/following'
   autoload :Group, 'tent-client/group'
   autoload :Profile, 'tent-client/profile'
+  autoload :ProfileType, 'tent-client/profile_type'
   autoload :App, 'tent-client/app'
   autoload :AppAuthorization, 'tent-client/app_authorization'
   autoload :Post, 'tent-client/post'

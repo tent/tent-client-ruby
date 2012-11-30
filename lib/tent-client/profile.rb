@@ -13,5 +13,9 @@ class TentClient
     def get
       @client.http.get 'profile'
     end
+
+    def type
+      ProfileType.new(@client)
+    end
   end
 end
