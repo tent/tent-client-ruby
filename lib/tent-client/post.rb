@@ -50,6 +50,10 @@ class TentClient
       PostVersion.new(@client)
     end
 
+    def mention
+      PostMention.new(@client)
+    end
+
     private
 
     def multipart_post(post, options, attachments, method=:post)
