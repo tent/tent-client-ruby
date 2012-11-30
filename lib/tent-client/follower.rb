@@ -16,8 +16,8 @@ class TentClient
       @client.http.get "followers", params
     end
 
-    def get(id)
-      @client.http.get "followers/#{id}"
+    def get(id_or_entity)
+      @client.http.get "followers/#{URI.encode_www_form_component(id_or_entity)}"
     end
 
     def update(id, data)
