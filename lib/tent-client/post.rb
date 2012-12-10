@@ -38,8 +38,8 @@ class TentClient
       @client.http.get("posts/#{id}")
     end
 
-    def delete(id)
-      @client.http.delete("posts/#{id}")
+    def delete(id, params = {})
+      @client.http.delete("posts/#{id}", params)
     end
 
     def attachment
