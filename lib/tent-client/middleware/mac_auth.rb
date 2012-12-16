@@ -1,6 +1,7 @@
 require 'openssl'
 require 'base64'
 require 'securerandom'
+require 'addressable/uri'
 
 class TentClient
   module Middleware
@@ -29,7 +30,8 @@ class TentClient
       end
 
       def build_request_string(time, nonce, env)
-        [time.to_s, nonce, env[:method].to_s.upcase, env[:url].request_uri, env[:url].host, env[:url].port || env[:url].inferred_port, nil, nil].join("\n")
+        url = Addressable::URI.parse(env[:url])
+        [time.to_s, nonce, env[:method].to_s.upcase, url.request_uri, url.host, url.port || url.inferred_port, nil, nil].join("\n")
       end
 
       def build_auth_header(time, nonce, signature)
