@@ -4,7 +4,7 @@ class TentClient
       @client = client
     end
 
-    def list(post_id, params)
+    def list(post_id, params={})
       @client.http.get("posts/#{post_id}/versions", params)
     end
   end
