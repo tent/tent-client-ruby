@@ -20,7 +20,7 @@ class TentClient
       @http || new_http
     end
 
-    %w{ head get put post patch delete options }.each do |verb|
+    %w{ head get put post patch delete }.each do |verb|
       define_method verb do |*args, &block|
         res = http.send(verb, *args, &block)
         return res unless server_urls.any?
@@ -31,6 +31,13 @@ class TentClient
           new_http
           send(verb, *args, &block)
         end
+      end
+    end
+
+    def options(url = nil, params = nil, headers = nil)
+      http.run_request(:options, url, nil, headers) do |request|
+        request.params.update(params) if params
+        yield request if block_given?
       end
     end
 
