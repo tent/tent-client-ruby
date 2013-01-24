@@ -30,7 +30,10 @@ class TentClient
 
     def challenge(path)
       str = SecureRandom.hex(32)
-      res = @client.http.get(path.sub(%r{\A/}, ''), :challenge => str)
+      res = @client.http.get(path.sub(%r{\A/}, '')) do |req|
+        req.params['challenge'] = str
+        req.headers['Accept'] = 'text/plain'
+      end
       res.status == 200 && res.body.match(/\A#{str}/)
     end
   end
