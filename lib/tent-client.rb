@@ -27,7 +27,7 @@ class TentClient
   MEDIA_TYPE = 'application/vnd.tent.v0+json'.freeze
   PROFILE_REL = 'https://tent.io/rels/profile'.freeze
 
-  attr_reader :faraday_adapter, :server_urls
+  attr_reader :faraday_adapter, :server_urls, :options
 
   def initialize(server_urls = [], options={})
     @server_urls = Array(server_urls)

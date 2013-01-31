@@ -24,6 +24,10 @@ class TentClient
       @client.http.get "followings/#{URI.encode_www_form_component(id_or_entity)}", params
     end
 
+    def proxy(id)
+      TentClient.new(@client.server_urls.map { |url| "#{url}/followings/#{id}" }, @client.options)
+    end
+
     def delete(id)
       @client.http.delete "followings/#{id}"
     end
