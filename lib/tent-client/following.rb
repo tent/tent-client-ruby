@@ -20,8 +20,8 @@ class TentClient
       @client.http.post('followings', data.merge(:entity => entity_uri.sub(%r{/$}, '')))
     end
 
-    def get(id_or_entity)
-      @client.http.get "followings/#{URI.encode_www_form_component(id_or_entity)}"
+    def get(id_or_entity, params={})
+      @client.http.get "followings/#{URI.encode_www_form_component(id_or_entity)}", params
     end
 
     def delete(id)
