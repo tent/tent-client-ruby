@@ -17,6 +17,7 @@ class TentClient
     end
 
     def create(entity_uri, data = {})
+      entity_uri, data = [entity_uri.delete(:entity), entity_uri] if entity_uri.kind_of?(Hash)
       @client.http.post('followings', data.merge(:entity => entity_uri.sub(%r{/$}, '')))
     end
 
