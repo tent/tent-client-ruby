@@ -35,12 +35,13 @@ describe TentClient::Discovery do
       ]
     }
   }
-  let(:instance) { described_class.new(entity_uri) }
+  let(:client) { TentClient.new(entity_uri) }
+  let(:instance) { described_class.new(client, entity_uri) }
 
   describe ".discover" do
     it "performs discovery" do
       described_class.any_instance.expects(:discover)
-      described_class.discover(entity_uri)
+      described_class.discover(client, entity_uri)
     end
   end
 

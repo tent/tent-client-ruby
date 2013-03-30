@@ -9,13 +9,13 @@ class TentClient
   class Discovery
     META_POST_REL = "https://tent.io/rels/meta-post".freeze
 
-    def self.discover(entity_uri)
-      new(entity_uri).discover
+    def self.discover(client, entity_uri)
+      new(client, entity_uri).discover
     end
 
-    attr_reader :entity_uri
-    def initialize(entity_uri)
-      @entity_uri = entity_uri
+    attr_reader :client, :entity_uri
+    def initialize(client, entity_uri)
+      @client, @entity_uri = client, entity_uri
     end
 
     def discover
@@ -32,7 +32,7 @@ class TentClient
 
     def http
       @http ||= Faraday.new do |f|
-        f.adapter :net_http
+        f.adapter *Array(client.faraday_adapter)
         f.response :follow_redirects
         f.response :multi_json, :content_type => /\bjson\Z/
       end
