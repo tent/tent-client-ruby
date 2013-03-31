@@ -65,6 +65,7 @@ class TentClient
         run_request(*args, &block)
       end
     rescue Faraday::Error::TimeoutError, Faraday::Error::ConnectionFailed
+      raise if servers.empty?
       new_http
       run_request(*args, &block)
     end
