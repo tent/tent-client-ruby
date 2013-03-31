@@ -1,8 +1,14 @@
 require 'tent-client/version'
-require 'tent-client/discovery'
+require 'faraday'
+require 'tent-client/middleware/encode_json'
 require 'tent-client/cycle_http'
+require 'tent-client/discovery'
+require 'tent-client/post'
 
 class TentClient
+  MEDIA_TYPES = {
+    :post => 'application/vnd.tent.post.v0+json'
+  }.freeze
 
   attr_reader :entity_uri
   attr_writer :faraday_adapter
@@ -18,6 +24,7 @@ class TentClient
 
   def new_http
     CycleHTTP.new(self) do |f|
+      f.use Middleware::EncodeJson unless @options[:skip_serialization]
       f.response :multi_json, :content_type => /\bjson\Z/ unless @options[:skip_serialization]
       f.adapter *Array(faraday_adapter)
     end
@@ -29,6 +36,10 @@ class TentClient
 
   def faraday_adapter
     @faraday_adapter || Faraday.default_adapter
+  end
+
+  def post
+    Post.new(self)
   end
 
 end
