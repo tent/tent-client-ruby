@@ -1,5 +1,6 @@
 require 'tent-client/version'
 require 'faraday'
+require 'tent-client/middleware/content_type_header'
 require 'tent-client/middleware/encode_json'
 require 'tent-client/cycle_http'
 require 'tent-client/discovery'
