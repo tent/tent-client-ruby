@@ -4,7 +4,7 @@ class TentClient
   module Middleware
     class ContentTypeHeader < Faraday::Middleware
       CONTENT_TYPE_HEADER = 'Content-Type'.freeze
-      MEDIA_TYPE = %w(application/vnd.tent.post.v0+json; type="%s").freeze
+      MEDIA_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
 
       def call(env)
         if env[:body] && Hash === env[:body]
