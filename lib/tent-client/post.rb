@@ -5,8 +5,8 @@ class TentClient
       @client = client
     end
 
-    def create(data, params = {})
-      client.http.post(:new_post, params, data)
+    def create(data, params = {}, &block)
+      client.http.post(:new_post, params, data, &block)
     end
   end
 end
