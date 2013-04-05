@@ -1,5 +1,6 @@
 require 'tent-client/version'
 require 'faraday'
+require 'tent-client/multipart-post/parts'
 require 'tent-client/tent_type'
 require 'tent-client/middleware/content_type_header'
 require 'tent-client/middleware/encode_json'
@@ -11,6 +12,8 @@ class TentClient
   MEDIA_TYPES = {
     :post => 'application/vnd.tent.post.v0+json'
   }.freeze
+  MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
+  MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
   attr_reader :entity_uri
   attr_writer :faraday_adapter

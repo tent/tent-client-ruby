@@ -59,6 +59,88 @@ describe TentClient::CycleHTTP do
     http_stubs.verify_stubbed_calls
   end
 
+  it 'builds multipart requests' do
+    cycle_http = described_class.new(client) do |f|
+      f.adapter :net_http
+    end
+
+    http_stubs = []
+    body = "--#{TentClient::MULTIPART_BOUNDARY}\r\nContent-Disposition: form-data; name=\"photos[0]\"; filename=\"foo.png\"\r\nContent-Length: 17\r\nContent-Type: image/png\r\nContent-Transfer-Encoding: binary\r\n\r\nFake photo data 1\r\n--#{TentClient::MULTIPART_BOUNDARY}\r\nContent-Disposition: form-data; name=\"photos[1]\"; filename=\"bar.png\"\r\nContent-Length: 17\r\nContent-Type: image/png\r\nContent-Transfer-Encoding: binary\r\n\r\nFake photo data 2\r\n--#{TentClient::MULTIPART_BOUNDARY}\r\nContent-Disposition: form-data; name=\"documentation\"; filename=\"README.txt\"\r\nContent-Length: 17\r\nContent-Type: text/plain\r\nContent-Transfer-Encoding: binary\r\n\r\nSome instructions\r\n--#{TentClient::MULTIPART_BOUNDARY}--\r\n\r\n"
+
+    %w{ put patch post }.each { |verb|
+      http_stubs << stub_request(verb.to_sym, "#{server_urls.first}/posts").with(
+        :body => body,
+        :header => {
+          'Content-Type' => "#{TentClient::MULTIPART_CONTENT_TYPE};boundary=#{TentClient::MULTIPART_BOUNDARY}",
+          'Content-Length' => body.length
+        }
+      )
+
+      expect(cycle_http).to respond_to(:multipart_request)
+      cycle_http.multipart_request(verb, :new_post, {}, [
+        {
+          :filename => 'foo.png',
+          :content_type => 'image/png',
+          :data => 'Fake photo data 1',
+          :category => 'photos'
+        },
+        {
+          :filename => 'bar.png',
+          :content_type => 'image/png',
+          :data => 'Fake photo data 2',
+          :category => 'photos'
+        },
+        {
+          :filename => 'README.txt',
+          :content_type => 'text/plain',
+          :data => 'Some instructions',
+          :category => 'documentation'
+        }
+      ])
+    }
+
+    http_stubs.each do |stub|
+      expect(stub).to have_been_requested
+    end
+  end
+
+  it 'builds multipart requests with custom headers' do
+    cycle_http = described_class.new(client) do |f|
+      f.adapter :net_http
+    end
+
+    http_stubs = []
+    body = "--#{TentClient::MULTIPART_BOUNDARY}\r\nContent-Disposition: form-data; name=\"photos\"; filename=\"foo.png\"\r\nContent-Length: 17\r\nContent-Type: image/vnd.foo.bar.v0+png\r\nContent-Transfer-Encoding: binary\r\nFoo: Bar\r\n\r\nFake photo data 1\r\n--#{TentClient::MULTIPART_BOUNDARY}--\r\n\r\n"
+
+    %w{ put patch post }.each { |verb|
+      http_stubs << stub_request(verb.to_sym, "#{server_urls.first}/posts").with(
+        :body => body,
+        :header => {
+          'Content-Type' => "#{TentClient::MULTIPART_CONTENT_TYPE};boundary=#{TentClient::MULTIPART_BOUNDARY}",
+          'Content-Length' => body.length
+        }
+      )
+
+      expect(cycle_http).to respond_to(:multipart_request)
+      cycle_http.multipart_request(verb, :new_post, {}, [
+        {
+          :filename => 'foo.png',
+          :content_type => 'image/png',
+          :data => 'Fake photo data 1',
+          :category => 'photos',
+          :headers => {
+            'Content-Type' => "image/vnd.foo.bar.v0+png",
+            'Foo' => 'Bar'
+          }
+        }
+      ])
+    }
+
+    http_stubs.each do |stub|
+      expect(stub).to have_been_requested
+    end
+  end
+
   it 'retries http with next server url' do
     http_stubs.get('/tent/posts') { |env|
       expect_server(env, server_urls.first)
