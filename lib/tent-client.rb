@@ -9,9 +9,7 @@ require 'tent-client/discovery'
 require 'tent-client/post'
 
 class TentClient
-  MEDIA_TYPES = {
-    :post => 'application/vnd.tent.post.v0+json'
-  }.freeze
+  POST_CONTENT_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
   MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
   MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
@@ -42,6 +40,10 @@ class TentClient
 
   def faraday_adapter
     @faraday_adapter || Faraday.default_adapter
+  end
+
+  def hex_digest(data)
+    Digest::SHA512.new.update(data).to_s[0...64]
   end
 
   def post
