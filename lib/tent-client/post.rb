@@ -20,7 +20,7 @@ class TentClient
       [data_as_attachment(data)] + attachments.map { |a|
         a[:filename] = a.delete(:name) || a.delete('name')
         a[:headers] = {
-          'Attachment-Hash' => client.hex_digest(a[:data] || a[:data])
+          'Attachment-Digest' => client.hex_digest(a[:data] || a[:data])
         }.merge(a[:headers] || {})
         a
       }
