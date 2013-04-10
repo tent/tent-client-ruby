@@ -6,11 +6,16 @@ class TentClient
     end
 
     def create(data, params = {}, options = {}, &block)
+      new_block = proc do |request|
+        request.options['tent.notification'] = options.delete(:notification)
+        yield(request) if block_given?
+      end
+
       if attachments = options.delete(:attachments)
         parts = multipart_parts(data, attachments)
-        client.http.multipart_request(:post, :new_post, params, parts, &block)
+        client.http.multipart_request(:post, :new_post, params, parts, &new_block)
       else
-        client.http.post(:new_post, params, data, &block)
+        client.http.post(:new_post, params, data, &new_block)
       end
     end
 
