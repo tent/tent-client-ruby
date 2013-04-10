@@ -22,7 +22,9 @@ class TentClient
       meta_post_urls = Array(perform_head_discovery || perform_get_discovery)
       return if meta_post_urls.empty?
       meta_post_urls.uniq.each do |url|
-        res = http.get(url)
+        res = http.get(url) do |request|
+          request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
+        end
         return res.body if res.success?
       end
       nil
