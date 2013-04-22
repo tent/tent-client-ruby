@@ -11,6 +11,7 @@ require 'tent-client/post'
 
 class TentClient
   POST_CONTENT_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
+  OAUTH_TOKEN_CONTENT_TYPE = %(application/vnd.tent.oauth.token.v0+json).freeze
   MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
   MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
@@ -50,6 +51,14 @@ class TentClient
 
   def post
     Post.new(self)
+  end
+
+  def oauth_token_exchange(data, &block)
+    new_block = proc do |request|
+      request.headers['Content-Type'] = OAUTH_TOKEN_CONTENT_TYPE
+      yield(request) if block_given?
+    end
+    http.post(:oauth_token, params = {}, data, &new_block)
   end
 
 end
