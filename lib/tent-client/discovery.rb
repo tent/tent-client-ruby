@@ -25,7 +25,7 @@ class TentClient
         res = http.get(url) do |request|
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
-        return res.body if res.success?
+        return res.body['content'] if res.success?
       end
       nil
     end
