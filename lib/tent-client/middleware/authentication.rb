@@ -1,4 +1,5 @@
 require 'faraday_middleware'
+require 'hawk'
 
 class TentClient
   module Middleware
