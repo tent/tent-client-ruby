@@ -11,7 +11,7 @@ class TentClient
         yield(request) if block_given?
       end
 
-      if attachments = options.delete(:attachments)
+      if (Array === (attachments = options.delete(:attachments))) && attachments.any?
         parts = multipart_parts(data, attachments)
         client.http.multipart_request(:post, :new_post, params, parts, &new_block)
       else
