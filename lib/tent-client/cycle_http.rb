@@ -64,6 +64,8 @@ class TentClient
         yield request if block_given?
       end
 
+      res.env[:tent_server] = current_server
+
       return res if servers.empty?
 
       case res.status

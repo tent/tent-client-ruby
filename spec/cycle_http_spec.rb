@@ -161,9 +161,11 @@ describe TentClient::CycleHTTP do
       f.adapter :test, http_stubs
     end
 
-    cycle_http.get(:new_post)
+    res = cycle_http.get(:new_post)
 
     http_stubs.verify_stubbed_calls
+
+    expect(res.env[:tent_server]).to_not be_nil
   end
 
   it 'returns response when on last server url' do
