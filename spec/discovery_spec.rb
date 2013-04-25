@@ -15,24 +15,26 @@ describe TentClient::Discovery do
   }
   let(:meta_post) {
     {
-      "entity" => entity_uri,
-      "previous_entities" => [],
-      "servers" => [
-        {
-          "version" => "0.3",
-          "urls" => {
-            "oauth_auth" => "#{server_url}/oauth/authorize",
-            "oauth_token" => "#{server_url}/oauth/token",
-            "posts_feed" => "#{server_url}/posts",
-            "new_post" => "#{server_url}/posts",
-            "post" => "#{server_url}/posts/{entity}/{post}",
-            "post_attachment" => "#{server_url}/posts/{entity}/{post}/attachments/{name}?version={version}",
-            "batch" => "#{server_url}/batch",
-            "server_info" => "#{server_url}/server"
-          },
-          "preference" => 0
-        }
-      ]
+      "content" => {
+        "entity" => entity_uri,
+        "previous_entities" => [],
+        "servers" => [
+          {
+            "version" => "0.3",
+            "urls" => {
+              "oauth_auth" => "#{server_url}/oauth/authorize",
+              "oauth_token" => "#{server_url}/oauth/token",
+              "posts_feed" => "#{server_url}/posts",
+              "new_post" => "#{server_url}/posts",
+              "post" => "#{server_url}/posts/{entity}/{post}",
+              "post_attachment" => "#{server_url}/posts/{entity}/{post}/attachments/{name}?version={version}",
+              "batch" => "#{server_url}/batch",
+              "server_info" => "#{server_url}/server"
+            },
+            "preference" => 0
+          }
+        ]
+      }
     }
   }
   let(:client) { TentClient.new(entity_uri) }
