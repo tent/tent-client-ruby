@@ -26,22 +26,28 @@ class TentClient
     end
 
     def named_url(name, params = {})
-      current_server['urls'][name.to_s].to_s.gsub(/{([^}]+)}/) {
+      current_server['urls'][name.to_s].to_s.gsub(/\{([^\}]+)\}/) {
         param = (params.delete($1) || params.delete($1.to_sym)).to_s
         URI.encode_www_form_component(param)
       }
     end
 
     %w( options get head delete ).map(&:to_sym).each do |verb|
-      define_method verb do |url, params={}, headers={}, &block|
-        run_request(verb, url, params, nil, headers)
-      end
+      class_eval(<<-RUBY
+        def #{verb}(url, params = {}, headers = {}, &block)
+          run_request(#{verb.inspect}, url, params, nil, headers)
+        end
+RUBY
+      )
     end
 
     %w( post put patch ).map(&:to_sym).each do |verb|
-      define_method verb do |url, params={}, body=nil, headers={}, &block|
-        run_request(verb, url, params, body, headers, &block)
-      end
+      class_eval(<<-RUBY
+        def #{verb}(url, params = {}, body = nil, headers = {}, &block)
+          run_request(#{verb.inspect}, url, params, body, headers, &block)
+        end
+RUBY
+      )
     end
 
     def multipart_request(verb, url, params, parts, headers = {}, &block)

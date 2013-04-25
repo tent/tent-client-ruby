@@ -24,6 +24,10 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'faraday_middleware-multi_json'
   gem.add_runtime_dependency 'nokogiri'
 
+  if RUBY_VERSION.split('.').slice(0, 2).join(".") == "1.8"
+    gem.add_runtime_dependency 'addressable'
+  end
+
   gem.add_development_dependency 'bundler'
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'rspec'

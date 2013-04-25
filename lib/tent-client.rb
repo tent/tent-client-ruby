@@ -9,6 +9,22 @@ require 'tent-client/cycle_http'
 require 'tent-client/discovery'
 require 'tent-client/post'
 
+##
+# Ruby 1.8.7 compatibility
+require 'uri'
+unless URI.respond_to?(:encode_www_form_component)
+  require 'addressable/uri'
+
+  URI.class_eval do
+    def self.encode_www_form_component(str)
+      Addressable::URI.encode_component(
+        str.to_s.gsub(/(\r\n|\n|\r)/, "\r\n"),
+        Addressable::URI::CharacterClasses::UNRESERVED
+      ).gsub("%20", "+")
+    end
+  end
+end
+
 class TentClient
   POST_CONTENT_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
   OAUTH_TOKEN_CONTENT_TYPE = %(application/vnd.tent.oauth.token.v0+json).freeze
