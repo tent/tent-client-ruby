@@ -69,12 +69,13 @@ describe TentClient::CycleHTTP do
 
     %w{ put patch post }.each { |verb|
       http_stubs << stub_request(verb.to_sym, "#{server_urls.first}/posts").with(
-        :body => body,
         :header => {
           'Content-Type' => "#{TentClient::MULTIPART_CONTENT_TYPE};boundary=#{TentClient::MULTIPART_BOUNDARY}",
           'Content-Length' => body.length
         }
-      )
+      ).with { |request|
+        request.body.to_s.split(%r{-+#{TentClient::MULTIPART_BOUNDARY}-*\r\n}).sort == body.split(%r{-+#{TentClient::MULTIPART_BOUNDARY}-*\r\n}).sort
+      }
 
       expect(cycle_http).to respond_to(:multipart_request)
       cycle_http.multipart_request(verb, :new_post, {}, [
