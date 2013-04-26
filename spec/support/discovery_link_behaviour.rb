@@ -10,7 +10,7 @@ shared_examples "a valid discovery link" do
   end
 
   it "returns meta post" do
-    expect(instance.discover).to eql(meta_post["content"])
+    expect(instance.discover).to eql(meta_post)
   end
 end
 

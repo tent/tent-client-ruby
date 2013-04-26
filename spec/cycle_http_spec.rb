@@ -8,22 +8,24 @@ describe TentClient::CycleHTTP do
   let(:entity_uri) { server_urls.first }
   let(:server_meta) {
     {
-      "entity" => entity_uri,
-      "previous_entities" => [],
-      "servers" => server_urls.each_with_index.map { |server_url, index|
-        {
-          "version" => "0.3",
-          "urls" => {
-            "oauth_auth" => "#{server_url}/oauth/authorize",
-            "oauth_token" => "#{server_url}/oauth/token",
-            "posts_feed" => "#{server_url}/posts",
-            "new_post" => "#{server_url}/posts",
-            "post" => "#{server_url}/posts/{entity}/{post}",
-            "post_attachment" => "#{server_url}/posts/{entity}/{post}/attachments/{name}?version={version}",
-            "batch" => "#{server_url}/batch",
-            "server_info" => "#{server_url}/server"
-          },
-          "preference" => index
+      "content" => {
+        "entity" => entity_uri,
+        "previous_entities" => [],
+        "servers" => server_urls.each_with_index.map { |server_url, index|
+          {
+            "version" => "0.3",
+            "urls" => {
+              "oauth_auth" => "#{server_url}/oauth/authorize",
+              "oauth_token" => "#{server_url}/oauth/token",
+              "posts_feed" => "#{server_url}/posts",
+              "new_post" => "#{server_url}/posts",
+              "post" => "#{server_url}/posts/{entity}/{post}",
+              "post_attachment" => "#{server_url}/posts/{entity}/{post}/attachments/{name}?version={version}",
+              "batch" => "#{server_url}/batch",
+              "server_info" => "#{server_url}/server"
+            },
+            "preference" => index
+          }
         }
       }
     }

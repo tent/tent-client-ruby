@@ -34,13 +34,17 @@ class TentClient
   attr_reader :entity_uri
   attr_writer :faraday_adapter
   def initialize(entity_uri, options = {})
-    @server_meta = options.delete(:server_meta)
+    @server_meta_post = options.delete(:server_meta)
     @faraday_adapter = options.delete(:faraday_adapter)
     @entity_uri, @options = entity_uri, options
   end
 
   def server_meta
-    @server_meta ||= Discovery.discover(self, entity_uri)
+    server_meta_post['content'] if server_meta_post
+  end
+
+  def server_meta_post
+    @server_meta_post ||= Discovery.discover(self, entity_uri)
   end
 
   def new_http
