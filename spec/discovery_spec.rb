@@ -4,9 +4,10 @@ require 'tent-client/discovery'
 require 'support/discovery_link_behaviour'
 
 describe TentClient::Discovery do
-  let(:entity_uri) { "http://entity.example.org/xfapc" }
-  let(:server_url) { "http://tent.example.org/xfapc" }
-  let(:server_meta_post_url) { "#{server_url}/posts/29834719346" }
+  let(:entity_uri) { "http://tent.example.org/xfapc" }
+  let(:server_host) { "http://tent.example.org" }
+  let(:server_url) { "#{server_host}/xfapc" }
+  let(:server_meta_post_url) { "/xfapc/posts/29834719346" }
   let(:link_header) {
     %(<#{server_meta_post_url}>; rel="%s") % described_class::META_POST_REL
   }
@@ -49,10 +50,14 @@ describe TentClient::Discovery do
 
   describe "#discover" do
     context "when multiple links" do
+      let(:env) { { :url => URI(entity_uri) } }
+      let(:res) {
+        stub(:env => env)
+      }
       before do
-        instance.expects(:perform_head_discovery).returns([
+        instance.expects(:perform_head_discovery).returns([res, [
           "http://foo.example.com", server_meta_post_url
-        ])
+        ]])
 
         stub_request(:any, "http://foo.example.com").to_return(:status => 404)
       end

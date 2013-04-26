@@ -4,6 +4,7 @@ require 'faraday_middleware'
 require 'faraday_middleware/multi_json'
 require 'nokogiri'
 require 'tent-client/link_header'
+require 'uri'
 
 class TentClient
   class Discovery
@@ -19,10 +20,13 @@ class TentClient
     end
 
     def discover
-      meta_post_urls = Array(perform_head_discovery || perform_get_discovery)
+      discover_res, meta_post_urls = perform_head_discovery || perform_get_discovery
       return if meta_post_urls.empty?
       meta_post_urls.uniq.each do |url|
-        res = http.get(url) do |request|
+        uri = URI(url)
+        uri.host ||= discover_res.env[:url].host
+        uri.scheme ||= discover_res.env[:url].scheme
+        res = http.get(uri.to_s) do |request|
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
         return res.body['content'] if res.success?
@@ -41,11 +45,14 @@ class TentClient
     end
 
     def perform_head_discovery
-      perform_header_discovery http.head(entity_uri)
+      res = http.head(entity_uri)
+      links = Array(perform_header_discovery(res))
+      [res, links] if links.any?
     end
 
     def perform_get_discovery
-      perform_link_discovery http.get(entity_uri)
+      res = http.get(entity_uri)
+      [res, Array(perform_link_discovery(res))]
     end
 
     def perform_header_discovery(res)

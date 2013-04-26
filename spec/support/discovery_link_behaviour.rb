@@ -1,6 +1,6 @@
 shared_examples "a valid discovery link" do
   before do
-    stub_request(:any, server_meta_post_url).to_return(
+    stub_request(:any, server_host + server_meta_post_url).to_return(
       :status => 200,
       :headers => {
         'Content-Type' => 'application/json'
@@ -16,7 +16,7 @@ end
 
 shared_examples "a invalid discovery link" do
   before do
-    stub_request(:any, server_meta_post_url).to_return(
+    stub_request(:any, server_host + server_meta_post_url).to_return(
       :status => 404,
       :headers => {
         'Content-Type' => 'application/json'
