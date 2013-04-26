@@ -32,7 +32,7 @@ class TentClient
   MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
   attr_reader :entity_uri
-  attr_writer :faraday_adapter
+  attr_writer :faraday_adapter, :server_meta_post
   def initialize(entity_uri, options = {})
     @server_meta_post = options.delete(:server_meta)
     @faraday_adapter = options.delete(:faraday_adapter)
