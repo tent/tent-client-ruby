@@ -23,6 +23,16 @@ class TentClient
       end
     end
 
+    def update(entity, post_id, data, params = {}, options = {}, &block)
+      params = { :entity => entity, :post => post_id }.merge(params)
+      if (Array === (attachments = options.delete(:attachments))) && attachments.any?
+        parts = multipart_parts(data, attachments)
+        client.http.multipart_request(:put, :post, params, parts, &block)
+      else
+        client.http.put(:post, params, data, &block)
+      end
+    end
+
     private
 
     def multipart_parts(data, attachments)
