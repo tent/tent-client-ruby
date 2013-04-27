@@ -35,7 +35,7 @@ class TentClient
     %w( options get head delete ).map(&:to_sym).each do |verb|
       class_eval(<<-RUBY
         def #{verb}(url, params = {}, headers = {}, &block)
-          run_request(#{verb.inspect}, url, params, nil, headers)
+          run_request(#{verb.inspect}, url, params, nil, headers, &block)
         end
 RUBY
       )
