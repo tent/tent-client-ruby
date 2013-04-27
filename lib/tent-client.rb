@@ -27,6 +27,7 @@ end
 
 class TentClient
   POST_CONTENT_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
+  POST_MENTIONS_CONTENT_TYPE = %(application/vnd.tent.post-mentions.v0+json).freeze
   OAUTH_TOKEN_CONTENT_TYPE = %(application/vnd.tent.oauth.token.v0+json).freeze
   MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
   MULTIPART_BOUNDARY = "-----------TentPart".freeze

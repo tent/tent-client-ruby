@@ -33,6 +33,19 @@ class TentClient
       end
     end
 
+    def mentions(entity, post_id, params = {}, options = {}, &block)
+      # TODO: handle options[:page] => :first || :last || page-id
+
+      params = { :entity => entity, :post => post_id }.merge(params)
+
+      new_block = proc do |request|
+        request.headers['Accept'] = POST_MENTIONS_CONTENT_TYPE
+        yield(request) if block_given?
+      end
+
+      client.http.get(:post, params, &new_block)
+    end
+
     private
 
     def multipart_parts(data, attachments)
