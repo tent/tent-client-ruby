@@ -63,7 +63,7 @@ class TentClient
       end
 
       def request_path(env)
-        env[:url].to_s.sub(%r{\A#{env[:url].scheme}://#{env[:url].host}}, '') # maintain query and fragment
+        env[:url].to_s.sub(%r{\A#{env[:url].scheme}://#{env[:url].host}(:#{env[:url].port})?}, '') # maintain query and fragment
       end
     end
   end
