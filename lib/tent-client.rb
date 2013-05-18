@@ -67,6 +67,11 @@ class TentClient
   end
 
   def hex_digest(data)
+    if data.kind_of?(IO)
+      _data = data.read
+      data.rewind
+      data = _data
+    end
     Digest::SHA512.new.update(data).to_s[0...64]
   end
 
