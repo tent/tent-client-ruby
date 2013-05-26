@@ -9,6 +9,10 @@ class TentClient
       client.http.get(:post, { :entity => entity, :post => post_id }.merge(params), &block)
     end
 
+    def list(params = {}, &block)
+      client.http.get(:posts_feed, params, &block)
+    end
+
     def create(data, params = {}, options = {}, &block)
       new_block = proc do |request|
         request.options['tent.notification'] = options.delete(:notification)
