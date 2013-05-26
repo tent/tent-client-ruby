@@ -6,15 +6,23 @@ class TentClient
       parse_uri(uri) if uri
     end
 
-    def to_s
-      "#{base}/v#{version}##{fragment}"
+    def has_fragment?
+      !!@fragment_separator
+    end
+
+    def to_s(options = {})
+      if (!has_fragment? && options[:fragment] != true) || options[:fragment] == false
+        "#{base}/v#{version}"
+      else
+        "#{base}/v#{version}##{fragment}"
+      end
     end
 
     private
 
     def parse_uri(uri)
-      if m = %r{\A(.+)/v(\d+)(?:#(.+)?)?\Z}.match(uri.to_s)
-        m, @base, @version, @fragment = m.to_a
+      if m = %r{\A(.+)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
+        m, @base, @version, @fragment_separator, @fragment = m.to_a
         @version = @version.to_i
       end
     end
