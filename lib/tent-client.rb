@@ -97,7 +97,9 @@ class TentClient
       request.headers['Content-Type'] = OAUTH_TOKEN_CONTENT_TYPE
       yield(request) if block_given?
     end
-    http.post(:oauth_token, params = {}, data, &new_block)
+    http.post(:oauth_token, params = {}, {
+      :token_type => 'https://tent.io/oauth/hawk-token'
+    }.merge(data), &new_block)
   end
 
 end
