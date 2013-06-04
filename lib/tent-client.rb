@@ -48,6 +48,10 @@ class TentClient
     @server_meta_post ||= Discovery.discover(self, entity_uri)
   end
 
+  def primary_server
+    server_meta['servers'].sort_by { |s| s['preference'] }.first
+  end
+
   def new_http
     CycleHTTP.new(self) do |f|
       f.use Middleware::ContentTypeHeader
@@ -77,6 +81,15 @@ class TentClient
 
   def post
     Post.new(self)
+  end
+
+  def oauth_redirect_uri(params = {})
+    uri = URI(primary_server['urls']['oauth_auth'])
+
+    query = params.inject([]) { |m, (k,v)| m << "#{k}=#{URI.encode_www_form_component(v)}"; m }.join('&')
+    uri.query ? uri.query += "&#{query}" : uri.query = query
+
+    uri
   end
 
   def oauth_token_exchange(data, &block)
