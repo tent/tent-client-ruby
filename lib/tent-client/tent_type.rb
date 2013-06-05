@@ -10,6 +10,11 @@ class TentClient
       !!@fragment_separator
     end
 
+    def fragment=(new_fragment)
+      @fragment_separator = "#"
+      @fragment = new_fragment
+    end
+
     def to_s(options = {})
       if (!has_fragment? && options[:fragment] != true) || options[:fragment] == false
         "#{base}/v#{version}"
