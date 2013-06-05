@@ -23,6 +23,10 @@ class TentClient
       end
     end
 
+    def ==(other)
+      base == other.base && version == other.version && has_fragment? == other.has_fragment? && fragment == other.fragment
+    end
+
     private
 
     def parse_uri(uri)
