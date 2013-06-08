@@ -1,5 +1,6 @@
 require 'tent-client/version'
 require 'faraday'
+require 'tent-client/faraday/utils'
 require 'tent-client/multipart-post/parts'
 require 'tent-client/tent_type'
 require 'tent-client/middleware/content_type_header'

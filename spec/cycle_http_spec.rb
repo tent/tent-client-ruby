@@ -197,4 +197,17 @@ describe TentClient::CycleHTTP do
 
     cycle_http.get(:new_post)
   end
+
+  it 'encodes flat params' do
+    http_stubs.get('/tent/posts') { |env|
+      expect(env[:url].query).to match("color=red")
+      expect(env[:url].query).to match("color=blue")
+    }
+
+    cycle_http = described_class.new(client) do |f|
+      f.adapter :test, http_stubs
+    end
+
+    cycle_http.get(:new_post, :color => ['red', 'blue'])
+  end
 end
