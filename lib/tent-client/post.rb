@@ -14,26 +14,30 @@ class TentClient
     end
 
     def create(data, params = {}, options = {}, &block)
-      new_block = proc do |request|
-        request.options['tent.notification'] = options.delete(:notification)
-        yield(request) if block_given?
-      end
-
       if (Array === (attachments = options.delete(:attachments))) && attachments.any?
         parts = multipart_parts(data, attachments)
-        client.http.multipart_request(:post, :new_post, params, parts, &new_block)
+        client.http.multipart_request(:post, :new_post, params, parts, &block)
       else
-        client.http.post(:new_post, params, data, &new_block)
+        client.http.post(:new_post, params, data, &block)
       end
     end
 
     def update(entity, post_id, data, params = {}, options = {}, &block)
+      new_block = if options.delete(:notification)
+        proc do |request|
+          request.options['tent.notification'] = true
+          yield(request) if block_given?
+        end
+      else
+        block
+      end
+
       params = { :entity => entity, :post => post_id }.merge(params)
       if (Array === (attachments = options.delete(:attachments))) && attachments.any?
         parts = multipart_parts(data, attachments)
-        client.http.multipart_request(:put, :post, params, parts, &block)
+        client.http.multipart_request(:put, :post, params, parts, &new_block)
       else
-        client.http.put(:post, params, data, &block)
+        client.http.put(:post, params, data, &new_block)
       end
     end
 
