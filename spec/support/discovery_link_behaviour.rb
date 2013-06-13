@@ -5,7 +5,7 @@ shared_examples "a valid discovery link" do
       :headers => {
         'Content-Type' => 'application/json'
       },
-      :body => Yajl::Encoder.encode(meta_post)
+      :body => Yajl::Encoder.encode({"post" => meta_post })
     )
   end
 
