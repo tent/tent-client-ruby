@@ -32,7 +32,7 @@ class TentClient
           :method => request_method(env),
           :port => request_port(env),
           :host => request_host(env),
-          :path => request_path(env)
+          :request_uri => request_path(env)
         )
       end
 
