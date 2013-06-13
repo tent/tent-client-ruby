@@ -10,8 +10,8 @@ class TentClient
   class Discovery
     META_POST_REL = "https://tent.io/rels/meta-post".freeze
 
-    def self.discover(client, entity_uri)
-      new(client, entity_uri).discover
+    def self.discover(client, entity_uri, options = {})
+      new(client, entity_uri).discover(options)
     end
 
     attr_reader :client, :entity_uri
@@ -19,7 +19,7 @@ class TentClient
       @client, @entity_uri = client, entity_uri
     end
 
-    def discover
+    def discover(options = {})
       discover_res, meta_post_urls = perform_head_discovery || perform_get_discovery
       return if meta_post_urls.empty?
       meta_post_urls.uniq.each do |url|
@@ -29,7 +29,10 @@ class TentClient
         res = http.get(uri.to_s) do |request|
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
-        return res.body if res.success?
+
+        if res.success?
+          return (options[:return_response] ? res : res.body)
+        end
       end
       nil
     end
