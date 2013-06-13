@@ -30,8 +30,8 @@ class TentClient
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
 
-        if res.success?
-          return (options[:return_response] ? res : res.body)
+        if res.success? && (Hash === res.body)
+          return (options[:return_response] ? res : res.body['post'])
         end
       end
       nil
