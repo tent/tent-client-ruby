@@ -23,10 +23,8 @@ class TentClient
       discover_res, meta_post_urls = perform_head_discovery || perform_get_discovery
       return if meta_post_urls.empty?
       meta_post_urls.uniq.each do |url|
-        uri = URI(url)
-        uri.host ||= discover_res.env[:url].host
-        uri.scheme ||= discover_res.env[:url].scheme
-        res = http.get(uri.to_s) do |request|
+        url = URI.join(discover_res.env[:url].to_s, url).to_s
+        res = http.get(url) do |request|
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
 
