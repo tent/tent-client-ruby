@@ -1,3 +1,5 @@
+require 'uri'
+
 class TentClient
   class TentType
     attr_accessor :base, :version, :fragment
@@ -13,13 +15,16 @@ class TentClient
     def fragment=(new_fragment)
       @fragment_separator = "#"
       @fragment = new_fragment
+      @fragment = decode_fragment(@fragment) if @fragment
+      @fragment
     end
 
     def to_s(options = {})
+      options[:encode_fragment] = true unless options.has_key?(:encode_fragment)
       if (!has_fragment? && options[:fragment] != true) || options[:fragment] == false
         "#{base}/v#{version}"
       else
-        "#{base}/v#{version}##{fragment}"
+        "#{base}/v#{version}##{options[:encode_fragment] ? encode_fragment(fragment) : fragment}"
       end
     end
 
@@ -32,8 +37,21 @@ class TentClient
     def parse_uri(uri)
       if m = %r{\A(.+?)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
         m, @base, @version, @fragment_separator, @fragment = m.to_a
+        @fragment = decode_fragment(@fragment) if @fragment
         @version = @version.to_i
       end
+    end
+
+    def decode_fragment(fragment)
+      return unless fragment
+      f, *r = URI.decode(fragment).split('#')
+      ([f] + r.map { |_f| decode_fragment(_f) }).join('#')
+    end
+
+    def encode_fragment(fragment)
+      return unless fragment
+      parts = fragment.split('#')
+      parts.reverse.inject(nil) { |m, _p| URI.encode("#{_p}#{m ? '#' + m : ''}") }
     end
   end
 end
