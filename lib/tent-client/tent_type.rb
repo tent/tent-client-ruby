@@ -30,7 +30,7 @@ class TentClient
     private
 
     def parse_uri(uri)
-      if m = %r{\A(.+)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
+      if m = %r{\A(.+?)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
         m, @base, @version, @fragment_separator, @fragment = m.to_a
         @version = @version.to_i
       end
