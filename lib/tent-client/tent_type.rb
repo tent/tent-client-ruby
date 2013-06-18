@@ -29,6 +29,14 @@ class TentClient
     end
 
     def ==(other)
+      unless TentType === other
+        if String === other
+          other = TentType.new(other)
+        else
+          return false
+        end
+      end
+
       base == other.base && version == other.version && has_fragment? == other.has_fragment? && fragment == other.fragment
     end
 
