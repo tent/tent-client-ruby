@@ -1,16 +1,20 @@
 class TentClient
   class Post
-    attr_reader :client
-    def initialize(client)
-      @client = client
+    attr_reader :client, :request_method
+    def initialize(client, options = {})
+      @client, @request_method = client, options.delete(:request_method)
+    end
+
+    def head
+      self.class.new(client, :request_method => :head)
     end
 
     def get(entity, post_id, params = {}, &block)
-      client.http.get(:post, { :entity => entity, :post => post_id }.merge(params), &block)
+      client.http.send(request_method || :get, :post, { :entity => entity, :post => post_id }.merge(params), &block)
     end
 
     def list(params = {}, &block)
-      client.http.get(:posts_feed, params, &block)
+      client.http.send(request_method || :get, :posts_feed, params, &block)
     end
 
     def create(data, params = {}, options = {}, &block)
@@ -51,7 +55,7 @@ class TentClient
         yield(request) if block_given?
       end
 
-      client.http.get(:post, params, &new_block)
+      client.http.send(request_method || :get, :post, params, &new_block)
     end
 
     def versions(entity, post_id, params = {}, options = {}, &block)
@@ -64,7 +68,7 @@ class TentClient
         yield(request) if block_given?
       end
 
-      client.http.get(:post, params, &new_block)
+      client.http.send(request_method || :get, :post, params, &new_block)
     end
 
     def children(entity, post_id, params = {}, options = {}, &block)
@@ -77,7 +81,7 @@ class TentClient
         yield(request) if block_given?
       end
 
-      client.http.get(:post, params, &new_block)
+      client.http.send(request_method || :get, :post, params, &new_block)
     end
 
     private
