@@ -27,7 +27,8 @@ unless URI.respond_to?(:encode_www_form_component)
 end
 
 class TentClient
-  POST_CONTENT_TYPE = %(application/vnd.tent.post.v0+json; type="%s").freeze
+  POST_MEDIA_TYPE = %(application/vnd.tent.post.v0+json).freeze
+  POST_CONTENT_TYPE = %(#{POST_MEDIA_TYPE}; type="%s").freeze
   POST_MENTIONS_CONTENT_TYPE = %(application/vnd.tent.post-mentions.v0+json).freeze
   POST_VERSIONS_CONTENT_TYPE = %(application/vnd.tent.post-versions.v0+json).freeze
   POST_CHILDREN_CONTENT_TYPE = %(application/vnd.tent.post-children.v0+json).freeze

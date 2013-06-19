@@ -10,7 +10,12 @@ class TentClient
     end
 
     def get(entity, post_id, params = {}, &block)
-      client.http.send(request_method || :get, :post, { :entity => entity, :post => post_id }.merge(params), &block)
+      new_block = proc do |request|
+        request.headers['Accept'] = POST_MEDIA_TYPE
+        yield(request) if block_given?
+      end
+
+      client.http.send(request_method || :get, :post, { :entity => entity, :post => post_id }.merge(params), &new_block)
     end
 
     def delete(entity, post_id, params = {}, &block)
