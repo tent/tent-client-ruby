@@ -36,13 +36,13 @@ class TentClient
     end
 
     def update(entity, post_id, data, params = {}, options = {}, &block)
-      new_block = if options.delete(:notification)
-        proc do |request|
+      new_block = proc do |request|
+        if options.delete(:import)
+          request.options['tent.import'] = true
+        elsif options.delete(:notification)
           request.options['tent.notification'] = true
-          yield(request) if block_given?
         end
-      else
-        block
+        yield(request) if block_given?
       end
 
       params = { :entity => entity, :post => post_id }.merge(params)

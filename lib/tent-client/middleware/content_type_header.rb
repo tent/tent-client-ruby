@@ -10,7 +10,9 @@ class TentClient
         if env[:body] && Hash === env[:body] && !env[:request_headers][CONTENT_TYPE_HEADER]
           env[:request_headers][CONTENT_TYPE_HEADER] = MEDIA_TYPE % (env[:body]['type'] || env[:body][:type])
 
-          if env[:request]['tent.notification']
+          if env[:request]['tent.import']
+            env[:request_headers][CONTENT_TYPE_HEADER] << %(; rel="https://tent.io/rels/import")
+          elsif env[:request]['tent.notification']
             env[:request_headers][CONTENT_TYPE_HEADER] << %(; rel="https://tent.io/rels/notification")
           end
         end
