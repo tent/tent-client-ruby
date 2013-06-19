@@ -13,6 +13,10 @@ class TentClient
       client.http.send(request_method || :get, :post, { :entity => entity, :post => post_id }.merge(params), &block)
     end
 
+    def delete(entity, post_id, params = {}, &block)
+      client.http.delete(:post, { :entity => entity, :post => post_id }.merge(params), &block)
+    end
+
     def list(params = {}, &block)
       client.http.send(request_method || :get, :posts_feed, params, &block)
     end
