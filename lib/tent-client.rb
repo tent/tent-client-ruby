@@ -9,6 +9,7 @@ require 'tent-client/middleware/authentication'
 require 'tent-client/cycle_http'
 require 'tent-client/discovery'
 require 'tent-client/post'
+require 'tent-client/attachment'
 
 ##
 # Ruby 1.8.7 compatibility
@@ -85,6 +86,10 @@ class TentClient
 
   def post
     Post.new(self)
+  end
+
+  def attachment
+    Attachment.new(self)
   end
 
   def oauth_redirect_uri(params = {})
