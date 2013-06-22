@@ -62,7 +62,10 @@ RUBY
     def run_request(verb, url, params, body, headers, &block)
       args = [verb, url, params, body, headers]
       if Symbol === url
+        name = url
         url = named_url(url, params || {})
+      else
+        name = nil
       end
 
       res = http.run_request(verb, url, body, headers) do |request|
@@ -70,9 +73,11 @@ RUBY
         yield request if block_given?
       end
 
-      res.env[:tent_server] = current_server
+      if name
+        res.env[:tent_server] = current_server
+      end
 
-      return res if servers.empty?
+      return res if servers.empty? || !name
 
       case res.status
       when 200...300, 400...500
