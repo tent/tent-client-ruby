@@ -2,10 +2,16 @@ require 'uri'
 
 class TentClient
   class TentType
+    ALL = 'all'.freeze
+
     attr_accessor :base, :version, :fragment
     def initialize(uri = nil)
       @version = 0
       parse_uri(uri) if uri
+    end
+
+    def all?
+      base == ALL
     end
 
     def has_fragment?
@@ -13,6 +19,8 @@ class TentClient
     end
 
     def fragment=(new_fragment)
+      return if all?
+
       @fragment_separator = "#"
       @fragment = new_fragment
       @fragment = decode_fragment(@fragment) if @fragment
@@ -20,6 +28,8 @@ class TentClient
     end
 
     def to_s(options = {})
+      return base if all?
+
       options[:encode_fragment] = true unless options.has_key?(:encode_fragment)
       if (!has_fragment? && options[:fragment] != true) || options[:fragment] == false
         "#{base}/v#{version}"
@@ -43,7 +53,9 @@ class TentClient
     private
 
     def parse_uri(uri)
-      if m = %r{\A(.+?)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
+      if uri == ALL
+        @base = uri
+      elsif m = %r{\A(.+?)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
         m, @base, @version, @fragment_separator, @fragment = m.to_a
         @fragment = decode_fragment(@fragment) if @fragment
         @version = @version.to_i
