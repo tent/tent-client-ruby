@@ -50,7 +50,7 @@ class TentClient
   end
 
   def server_meta_post
-    @server_meta_post ||= Discovery.discover(self, entity_uri)
+    @server_meta_post ||= entity_uri ? Discovery.discover(self, entity_uri) : nil
   end
 
   def primary_server

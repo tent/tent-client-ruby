@@ -7,7 +7,7 @@ class TentClient
     def initialize(client, &faraday_block)
       @faraday_block = faraday_block
       @client = client
-      @servers = client.server_meta['servers'].sort_by { |s| s['preference'] }
+      @servers = client.entity_uri ? client.server_meta['servers'].sort_by { |s| s['preference'] } : []
     end
 
     def current_server
