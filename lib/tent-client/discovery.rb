@@ -15,21 +15,28 @@ class TentClient
     end
 
     attr_reader :client, :entity_uri
+    attr_accessor :last_response
     def initialize(client, entity_uri)
       @client, @entity_uri = client, entity_uri
     end
 
     def discover(options = {})
       discover_res, meta_post_urls = perform_head_discovery || perform_get_discovery
-      return if meta_post_urls.empty?
+
+      if meta_post_urls.empty?
+        return options[:return_response] ? last_response : nil
+      end
+
       meta_post_urls.uniq.each do |url|
         url = URI.join(discover_res.env[:url].to_s, url).to_s
         res = http.get(url) do |request|
           request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
         end
 
-        if res.success? && (Hash === res.body)
-          return (options[:return_response] ? res : res.body['post'])
+        if options[:return_response]
+          return res
+        elsif res.success? && (Hash === res.body)
+          return res.body['post']
         end
       end
       nil
@@ -47,12 +54,14 @@ class TentClient
 
     def perform_head_discovery
       res = http.head(entity_uri)
+      self.last_response = res
       links = Array(perform_header_discovery(res))
       [res, links] if links.any?
     end
 
     def perform_get_discovery
       res = http.get(entity_uri)
+      self.last_response = res
       [res, Array(perform_link_discovery(res))]
     end
 
