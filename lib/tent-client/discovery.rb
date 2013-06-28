@@ -70,6 +70,7 @@ class TentClient
         links = LinkHeader.parse(header).links.select { |l| l[:rel] == META_POST_REL }.map { |l| l.uri }
         links unless links.empty?
       end
+    rescue LinkHeader::MalformedLinkHeader
     end
 
     def perform_link_discovery(res)

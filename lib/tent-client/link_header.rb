@@ -5,6 +5,8 @@ class TentClient
   class LinkHeader
     attr_accessor :links
 
+    MalformedLinkHeader = Class.new(StandardError)
+
     def self.parse(header)
       new header.split(',').map { |l| Link.parse(l) }
     end
@@ -24,6 +26,9 @@ class TentClient
         s = StringScanner.new(link_text)
         s.scan(/[^<]+/)
         link = s.scan(/<[^\s]+>/)
+
+        raise MalformedLinkHeader.new("Link: #{s.inspect}") unless link
+
         link = link[1..-2]
 
         s.scan(/[^a-z]+/)
