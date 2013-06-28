@@ -45,6 +45,7 @@ class TentClient
   def initialize(entity_uri, options = {})
     @server_meta_post = options.delete(:server_meta)
     @faraday_adapter = options.delete(:faraday_adapter)
+    @faraday_block = options.delete(:faraday_setup)
     @entity_uri, @options = entity_uri, options
   end
 
@@ -66,6 +67,7 @@ class TentClient
       f.use Middleware::EncodeJson unless @options[:skip_serialization]
       f.use Middleware::Authentication, @options[:credentials] if @options[:credentials]
       f.response :multi_json, :content_type => /\bjson\Z/ unless @options[:skip_serialization] || @options[:skip_response_serialization]
+      @faraday_block.call(f) if @faraday_block
       f.adapter *Array(faraday_adapter)
     end
   end
