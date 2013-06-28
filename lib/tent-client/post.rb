@@ -40,20 +40,20 @@ class TentClient
     end
 
     def update(entity, post_id, data, params = {}, options = {}, &block)
-      new_block = proc do |request|
-        if options.delete(:import)
-          request.options['tent.import'] = true
-        elsif options.delete(:notification)
-          request.options['tent.notification'] = true
-        end
-        yield(request) if block_given?
-      end
-
       params = { :entity => entity, :post => post_id }.merge(params)
       if (Array === (attachments = options.delete(:attachments))) && attachments.any?
-        parts = multipart_parts(data, attachments)
-        client.http.multipart_request(:put, :post, params, parts, &new_block)
+        parts = multipart_parts(data, attachments, options)
+        client.http.multipart_request(:put, :post, params, parts, &block)
       else
+        new_block = proc do |request|
+          if options.delete(:import)
+            request.options['tent.import'] = true
+          elsif options.delete(:notification)
+            request.options['tent.notification'] = true
+          end
+          yield(request) if block_given?
+        end
+
         client.http.put(:post, params, data, &new_block)
       end
     end
@@ -99,19 +99,27 @@ class TentClient
 
     private
 
-    def multipart_parts(data, attachments)
-      [data_as_attachment(data)] + attachments.map { |a|
+    def multipart_parts(data, attachments, options = {})
+      [data_as_attachment(data, options)] + attachments.map { |a|
         a[:filename] = a.delete(:name) || a.delete('name')
         a[:headers] = a[:headers] || {}
         a
       }
     end
 
-    def data_as_attachment(data)
+    def data_as_attachment(data, options = {})
+      content_type = POST_CONTENT_TYPE % (data[:type] || data['type'])
+
+      if options[:import]
+        content_type << %(; rel="https://tent.io/rels/import")
+      elsif options[:notification]
+        content_type << %(; rel="https://tent.io/rels/notification")
+      end
+
       {
         :category => 'post',
         :filename => 'post.json',
-        :content_type => POST_CONTENT_TYPE % (data[:type] || data['type']),
+        :content_type => content_type,
         :data => Yajl::Encoder.encode(data)
       }
     end
