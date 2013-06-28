@@ -11,6 +11,10 @@ class TentClient
       @client = client
 
       if client.entity_uri
+        unless (Hash === client.server_meta) && (Array === client.server_meta['servers'])
+          raise MalformedServerMeta.new("Server meta post for Entity(#{client.entity_uri.inspect}) is malformed: #{client.server_meta.inspect}")
+        end
+
         @servers = client.server_meta['servers'].sort_by { |s| s['preference'] }
       else
         @servers = []

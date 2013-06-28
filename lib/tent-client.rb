@@ -37,6 +37,7 @@ class TentClient
   MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
   MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
+  MalformedServerMeta = Class.new(StandardError)
   ServerNotFound = Class.new(StandardError)
 
   attr_reader :entity_uri
