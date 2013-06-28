@@ -1,3 +1,5 @@
+require 'yajl'
+
 class TentClient
 
   # Proxies to Faraday and cycles through server urls
@@ -7,7 +9,12 @@ class TentClient
     def initialize(client, &faraday_block)
       @faraday_block = faraday_block
       @client = client
-      @servers = client.entity_uri ? client.server_meta['servers'].sort_by { |s| s['preference'] } : []
+
+      if client.entity_uri
+        @servers = client.server_meta['servers'].sort_by { |s| s['preference'] }
+      else
+        @servers = []
+      end
     end
 
     def current_server
@@ -26,7 +33,11 @@ class TentClient
     end
 
     def named_url(name, params = {})
-      current_server['urls'][name.to_s].to_s.gsub(/\{([^\}]+)\}/) {
+      unless (Hash === current_server) && (Hash === current_server['urls']) && (template = current_server['urls'][name.to_s])
+        raise ServerNotFound.new("Failed to match #{name.to_s.inspect} to a url for server: #{Yajl::Encoder.encode(current_server)}")
+      end
+
+      template.to_s.gsub(/\{([^\}]+)\}/) {
         param = (params.delete($1) || params.delete($1.to_sym)).to_s
         URI.encode_www_form_component(param)
       }

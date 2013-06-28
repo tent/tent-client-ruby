@@ -37,6 +37,8 @@ class TentClient
   MULTIPART_CONTENT_TYPE = 'multipart/form-data'.freeze
   MULTIPART_BOUNDARY = "-----------TentPart".freeze
 
+  ServerNotFound = Class.new(StandardError)
+
   attr_reader :entity_uri
   attr_writer :faraday_adapter, :server_meta_post
   def initialize(entity_uri, options = {})
