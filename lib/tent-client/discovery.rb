@@ -17,7 +17,9 @@ class TentClient
     attr_reader :client, :entity_uri
     attr_accessor :last_response
     def initialize(client, entity_uri)
-      @client, @entity_uri = client, entity_uri
+      @entity_uri = entity_uri
+      @client = client.dup
+      @client.faraday_adapter = :net_http
     end
 
     def discover(options = {})

@@ -2,6 +2,7 @@ require 'tent-client/version'
 require 'faraday'
 require 'tent-client/faraday/utils'
 require 'tent-client/multipart-post/parts'
+require 'tent-client/faraday/chunked_adapter'
 require 'tent-client/tent_type'
 require 'tent-client/middleware/content_type_header'
 require 'tent-client/middleware/encode_json'
@@ -49,6 +50,14 @@ class TentClient
     @entity_uri, @options = entity_uri, options
   end
 
+  def dup
+    self.class.new(@entity_uri, @options.merge(
+      :server_meta => @server_meta_post,
+      :faraday_adapter => @faraday_adapter,
+      :faraday_block => @faraday_block
+    ))
+  end
+
   def server_meta
     server_meta_post['content'] if server_meta_post
   end
@@ -78,6 +87,10 @@ class TentClient
 
   def faraday_adapter
     @faraday_adapter || Faraday.default_adapter
+  end
+
+  def faraday_adapter=(adapter)
+    @faraday_adapter = adapter
   end
 
   def hex_digest(data)
