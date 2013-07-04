@@ -41,7 +41,7 @@ class TentClient
   MalformedServerMeta = Class.new(StandardError)
   ServerNotFound = Class.new(StandardError)
 
-  attr_reader :entity_uri
+  attr_reader :entity_uri, :options
   attr_writer :faraday_adapter, :server_meta_post
   def initialize(entity_uri, options = {})
     @server_meta_post = options.delete(:server_meta)

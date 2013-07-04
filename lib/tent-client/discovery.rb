@@ -50,7 +50,7 @@ class TentClient
       @http ||= Faraday.new do |f|
         f.adapter *Array(client.faraday_adapter)
         f.response :follow_redirects
-        f.response :multi_json, :content_type => /\bjson\Z/
+        f.response :multi_json, :content_type => /\bjson\Z/ unless client.options[:skip_serialization] || client.options[:skip_response_serialization]
       end
     end
 
