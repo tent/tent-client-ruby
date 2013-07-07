@@ -11,15 +11,16 @@ class TentClient
     META_POST_REL = "https://tent.io/rels/meta-post".freeze
 
     def self.discover(client, entity_uri, options = {})
-      new(client, entity_uri).discover(options)
+      new(client, entity_uri, :skip_serialization => false).discover(options)
     end
 
     attr_reader :client, :entity_uri
     attr_accessor :last_response
-    def initialize(client, entity_uri)
+    def initialize(client, entity_uri, options = {})
       @entity_uri = entity_uri
       @client = client.dup
       @client.faraday_adapter = :net_http
+      @options = options
     end
 
     def discover(options = {})
@@ -50,7 +51,7 @@ class TentClient
       @http ||= Faraday.new do |f|
         f.adapter *Array(client.faraday_adapter)
         f.response :follow_redirects
-        f.response :multi_json, :content_type => /\bjson\Z/ unless client.options[:skip_serialization] || client.options[:skip_response_serialization]
+        f.response :multi_json, :content_type => /\bjson\Z/ unless (@options[:skip_serialization] != false) && (client.options[:skip_serialization] || client.options[:skip_response_serialization])
       end
     end
 
