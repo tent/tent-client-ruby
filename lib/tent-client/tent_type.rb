@@ -55,10 +55,10 @@ class TentClient
     def parse_uri(uri)
       if uri == ALL
         @base = uri
-      elsif m = %r{\A(.+?)/v(\d+)(#(.+)?)?\Z}.match(uri.to_s)
+      elsif m = %r{\A(.+?)/v(.+?)(#(.+)?)?\Z}.match(uri.to_s)
         m, @base, @version, @fragment_separator, @fragment = m.to_a
         @fragment = decode_fragment(@fragment) if @fragment
-        @version = @version.to_i
+        @version = @version
       end
     end
 
