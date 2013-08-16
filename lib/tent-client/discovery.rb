@@ -32,8 +32,12 @@ class TentClient
 
       meta_post_urls.uniq.each do |url|
         url = URI.join(discover_res.env[:url].to_s, url).to_s
-        res = http.get(url) do |request|
-          request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
+        begin
+          res = http.get(url) do |request|
+            request.headers['Accept'] = POST_CONTENT_TYPE % "https://tent.io/types/meta/v0#"
+          end
+        rescue Faraday::Error::TimeoutError, Faraday::Error::ConnectionFailed
+          res = Faraday::Response.new({})
         end
 
         if options[:return_response]
