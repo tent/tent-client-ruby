@@ -7,26 +7,59 @@ class TentClient
       AUTHORIZATION_HEADER = 'Authorization'.freeze
       CONTENT_TYPE_HEADER = 'Content-Type'.freeze
 
-      def initialize(app, credentials)
+      MAX_RETRIES = 1.freeze
+
+      def initialize(app, credentials, options = {})
         super(app)
+
         @credentials = {
           :id => credentials[:id],
           :key => credentials[:hawk_key],
           :algorithm => credentials[:hawk_algorithm]
         } if credentials
+
+        @ts_skew = options[:ts_skew] || 0
+        @update_ts_skew = options[:update_ts_skew] || lambda {}
+        @ts_skew_retry_enabled = options[:ts_skew_retry_enabled]
+        @retry_count = 0
       end
 
       def call(env)
-        env[:request_headers][AUTHORIZATION_HEADER] = build_authorization_header(env) if @credentials
-        @app.call env
+        set_auth_header(env)
+        res = @app.call(env)
+
+        tsm_header = res.env[:response_headers]['WWW-Authenticate']
+
+        if tsm_header && (tsm_header =~ /tsm/) && (skew = timestamp_skew_from_header(tsm_header)) && @retry_count < MAX_RETRIES
+          @update_ts_skew.call(skew)
+          @ts_skew = skew
+
+          @retry_count += 1
+
+          return call(env) if @ts_skew_retry_enabled
+        end
+
+        res
       end
 
       private
 
+      def set_auth_header(env)
+        env[:request_headers][AUTHORIZATION_HEADER] = build_authorization_header(env) if @credentials
+      end
+
+      def timestamp
+        Time.now.to_i + @ts_skew
+      end
+
+      def timestamp_skew_from_header(header)
+        Hawk::Client.calculate_time_offset(header, :credentials => @credentials)
+      end
+
       def build_authorization_header(env)
         Hawk::Client.build_authorization_header(
           :credentials => @credentials,
-          :ts => Time.now.to_i,
+          :ts => timestamp,
           :payload => request_body(env),
           :content_type => request_content_type(env),
           :method => request_method(env),

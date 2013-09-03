@@ -43,10 +43,12 @@ class TentClient
 
   attr_reader :entity_uri, :options
   attr_writer :faraday_adapter, :faraday_setup, :server_meta_post
+  attr_accessor :ts_skew
   def initialize(entity_uri, options = {})
     @server_meta_post = options.delete(:server_meta)
     @faraday_adapter = options.delete(:faraday_adapter)
     @faraday_setup = options.delete(:faraday_setup)
+    @ts_skew = options.delete(:ts_skew)
     @entity_uri, @options = entity_uri, options
   end
 
@@ -71,10 +73,17 @@ class TentClient
   end
 
   def new_http
-    CycleHTTP.new(self) do |f|
+    authentication_options = {}
+    authentication_options[:ts_skew] = @ts_skew if @ts_skew
+    authentication_options[:ts_skew_retry_enabled] = @options.has_key?(:ts_skew_retry_enabled) ? @options[:ts_skew_retry_enabled] : true
+    authentication_options[:update_ts_skew] = proc do |skew|
+      @ts_skew = skew
+    end
+
+    @http = CycleHTTP.new(self) do |f|
       f.use Middleware::ContentTypeHeader
       f.use Middleware::EncodeJson unless @options[:skip_serialization]
-      f.use Middleware::Authentication, @options[:credentials] if @options[:credentials]
+      f.use Middleware::Authentication, @options[:credentials], authentication_options if @options[:credentials]
       f.response :multi_json, :content_type => /\bjson\Z/ unless @options[:skip_serialization] || @options[:skip_response_serialization]
       @faraday_setup.call(f) if @faraday_setup
       f.adapter *Array(faraday_adapter)
@@ -82,7 +91,7 @@ class TentClient
   end
 
   def http
-    @http ||= new_http
+    @http || new_http
   end
 
   def faraday_adapter
