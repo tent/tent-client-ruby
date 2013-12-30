@@ -11,7 +11,7 @@ You should be familiar with [Faraday](https://github.com/lostisland/faraday) bef
 Add the following to your Gemfile
 
 ```ruby
-gem "tent-client""
+gem "tent-client"
 ```
 
 or
